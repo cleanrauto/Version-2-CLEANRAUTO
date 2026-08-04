@@ -25,7 +25,7 @@ export const FormulasSection: React.FC<FormulasSectionProps> = ({ onSelectFormul
             Tarifs & Prestations Clés en Main
           </span>
           <h2 className="font-serif-luxury text-3xl sm:text-5xl font-light text-white tracking-tight mb-6">
-            Nos <span className="green-gradient-text italic font-normal">Formules de Soin</span>
+            Nos <span className="green-gradient-text font-normal">Formules de Soin</span>
           </h2>
           <div className="w-16 h-[1px] bg-[#25D366]/50 mx-auto mb-6" />
           <p className="text-sm sm:text-base text-[#a0aab8] font-light leading-relaxed">
