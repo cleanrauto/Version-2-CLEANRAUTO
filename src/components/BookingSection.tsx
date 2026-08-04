@@ -137,9 +137,41 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
     return `https://wa.me/33617200516?text=${text}`;
   };
 
-  const handleSubmitForm = (e: React.FormEvent) => {
+  const handleSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+
+    try {
+      const response = await fetch('https://formspree.io/f/xkjwwjww', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          nom: bookingState.fullName,
+          telephone: bookingState.phone,
+          email: bookingState.email,
+          commune: bookingState.cityName,
+          adresse: bookingState.customAddress,
+          typeLieu: bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile',
+          vehiculeCategorie: bookingState.vehicleType,
+          vehiculeDetails: bookingState.vehicleModelDetails,
+          formule: currentFormula.name,
+          options: selectedAddons.map((a) => a.name).join(', ') || 'Aucune',
+          dateSouhaitee: bookingState.date,
+          creneauHoraire: bookingState.timeSlot,
+          totalEstime: grandTotalDisplay,
+        }),
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+      } else {
+        alert("Une erreur est survenue lors de l'envoi du formulaire.");
+      }
+    } catch (error) {
+      alert("Erreur de connexion. Veuillez réessayer ou utiliser WhatsApp.");
+    }
   };
 
   return (
@@ -403,7 +435,7 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
                 </div>
 
                 {/* 6. Contact Details */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-white/10">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-white/10">
                   <div>
                     <label className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1">
                       Nom & Prénom *
@@ -427,6 +459,20 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
                       placeholder="Ex: 06 12 34 56 78"
                       value={bookingState.phone}
                       onChange={(e) => setBookingState((prev) => ({ ...prev, phone: e.target.value }))}
+                      className="w-full bg-black/60 border border-white/15 focus:border-[#25D366] text-white text-xs rounded-xl p-3 focus:outline-none"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1">
+                      Email *
+                    </label>
+                    <input
+                      type="email"
+                      placeholder="Ex: contact@email.com"
+                      value={bookingState.email}
+                      onChange={(e) => setBookingState((prev) => ({ ...prev, email: e.target.value }))}
                       className="w-full bg-black/60 border border-white/15 focus:border-[#25D366] text-white text-xs rounded-xl p-3 focus:outline-none"
                       required
                     />
