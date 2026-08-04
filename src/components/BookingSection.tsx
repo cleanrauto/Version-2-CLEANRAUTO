@@ -127,7 +127,7 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
     const vehicleLabel = VEHICLE_OPTIONS.find((v) => v.id === bookingState.vehicleType)?.label;
     const addonsText =
       selectedAddons.length > 0
-        ? selectedAddons.map((a) => a.name).join(', ')
+        ? selectedAddons.map((a) => `${a.name} (+${a.price}€)`).join(', ')
         : 'Aucune option';
 
     const priceLabel = isDevis ? 'Sur Devis' : `${formulaPrice}€`;
@@ -140,33 +140,47 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
   const handleSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const formulaPriceText = typeof formulaPrice === 'number' ? `${formulaPrice}€` : formulaPrice;
+    const displacementFeeText = displacementFee === 0 ? 'Offert (0€)' : `${displacementFee.toFixed(2).replace('.', ',')}€`;
+
+    const addonsFormattedList =
+      selectedAddons.length > 0
+        ? selectedAddons.map((a) => `  • **${a.name}** : +${a.price}€`).join('\n')
+        : '  • **Aucune option**';
+
     const formattedMessage = `
 ========================================
-📋 NOUVELLE DEMANDE DE RÉSERVATION CLEAN'R
+📋 **NOUVELLE DEMANDE DE RÉSERVATION CLEAN'R**
 ========================================
 
-👤 CLIENT
-• Nom & Prénom : ${bookingState.fullName}
-• Téléphone     : ${bookingState.phone}
-• Email         : ${bookingState.email}
+👤 **INFORMATIONS CLIENT**
+• **Nom & Prénom** : ${bookingState.fullName}
+• **Téléphone**     : ${bookingState.phone}
+• **Email**         : ${bookingState.email}
 
-🚗 VÉHICULE
-• Catégorie     : ${bookingState.vehicleType.toUpperCase()}
-• Modèle/Détails : ${bookingState.vehicleModelDetails || 'Non spécifié'}
+🚗 **DÉTAILS DU VÉHICULE**
+• **Catégorie**     : ${bookingState.vehicleType.toUpperCase()}
+• **Modèle/Détails** : ${bookingState.vehicleModelDetails || 'Non spécifié'}
 
-🧽 PRESTATION
-• Formule       : ${currentFormula.name}
-• Options       : ${selectedAddons.map((a) => a.name).join(', ') || 'Aucune'}
+🧽 **PRESTATION & FORMULE**
+• **Formule choisie** : ${currentFormula.name} (${formulaPriceText})
 
-📍 LIEU & CRÉNEAU
-• Commune       : ${bookingState.cityName}
-• Type de lieu  : ${bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile'}
-• Adresse       : ${bookingState.customAddress || 'Non renseignée'}
-• Date souhaitée: ${bookingState.date}
-• Créneau       : ${bookingState.timeSlot}
+➕ **OPTIONS COMPLÉMENTAIRES SÉLECTIONNÉES**
+${addonsFormattedList}
 
-💰 TARIFICATION
-• Total estimé  : ${grandTotalDisplay}
+📍 **LIEU ET CRÉNEAU D'INTERVENTION**
+• **Commune**       : ${bookingState.cityName}
+• **Type de lieu**  : ${bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile'}
+• **Adresse**       : ${bookingState.customAddress || 'Non renseignée'}
+• **Date souhaitée** : ${bookingState.date}
+• **Créneau horaire** : ${bookingState.timeSlot}
+
+💰 **DÉTAIL DU TARIF & ESTIMATION TOTAL**
+• **Prix de la formule**      : ${formulaPriceText}
+• **Total des options**       : ${addonsTotalPrice}€
+• **Frais de déplacement**    : ${displacementFeeText} (${bookingState.cityName})
+----------------------------------------
+• **TOTAL ESTIMÉ TTC**        : **${grandTotalDisplay}**
 ========================================
     `.trim();
 
