@@ -119,7 +119,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenBooking }) =>
 
               <div className="flex items-center space-x-2 text-gray-300">
                 <Mail className="w-4 h-4 text-[#25D366]" />
-                <span>cleanr.autopro@gmail.com</span>
+                <span>contact@cleanrauto.fr</span>
               </div>
 
               <div className="flex items-start space-x-2 text-gray-300">
