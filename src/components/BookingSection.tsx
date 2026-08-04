@@ -140,6 +140,36 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
   const handleSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const formattedMessage = `
+========================================
+📋 NOUVELLE DEMANDE DE RÉSERVATION CLEAN'R
+========================================
+
+👤 CLIENT
+• Nom & Prénom : ${bookingState.fullName}
+• Téléphone     : ${bookingState.phone}
+• Email         : ${bookingState.email}
+
+🚗 VÉHICULE
+• Catégorie     : ${bookingState.vehicleType.toUpperCase()}
+• Modèle/Détails : ${bookingState.vehicleModelDetails || 'Non spécifié'}
+
+🧽 PRESTATION
+• Formule       : ${currentFormula.name}
+• Options       : ${selectedAddons.map((a) => a.name).join(', ') || 'Aucune'}
+
+📍 LIEU & CRÉNEAU
+• Commune       : ${bookingState.cityName}
+• Type de lieu  : ${bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile'}
+• Adresse       : ${bookingState.customAddress || 'Non renseignée'}
+• Date souhaitée: ${bookingState.date}
+• Créneau       : ${bookingState.timeSlot}
+
+💰 TARIFICATION
+• Total estimé  : ${grandTotalDisplay}
+========================================
+    `.trim();
+
     try {
       const response = await fetch('https://formspree.io/f/xkjwwjww', {
         method: 'POST',
@@ -148,19 +178,9 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
           'Accept': 'application/json',
         },
         body: JSON.stringify({
-          nom: bookingState.fullName,
-          telephone: bookingState.phone,
+          _subject: `Réservation CLEAN'R - ${bookingState.fullName} (${bookingState.cityName})`,
           email: bookingState.email,
-          commune: bookingState.cityName,
-          adresse: bookingState.customAddress,
-          typeLieu: bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile',
-          vehiculeCategorie: bookingState.vehicleType,
-          vehiculeDetails: bookingState.vehicleModelDetails,
-          formule: currentFormula.name,
-          options: selectedAddons.map((a) => a.name).join(', ') || 'Aucune',
-          dateSouhaitee: bookingState.date,
-          creneauHoraire: bookingState.timeSlot,
-          totalEstime: grandTotalDisplay,
+          message: formattedMessage,
         }),
       });
 
