@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, MapPin, ChevronDown, ShieldCheck, Clock, Award, Phone } from 'lucide-react';
+import { Sparkles, MapPin, ChevronDown, ShieldCheck, Clock, Award } from 'lucide-react';
 import heroImgPath from '../assets/images/cleanr_hero_detail_1785743158188.jpg';
 
 interface HeroProps {
@@ -34,8 +34,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
         </div>
 
         {/* Titre Raffiné avec Serif */}
-        <h1 className="font-serif-luxury text-4xl sm:text-6xl md:text-7xl font-light text-white tracking-tight leading-[1.1] mb-6 max-w-4xl">
-          L' excellence du <span className="green-gradient-text italic font-normal">soin automobile</span>, là où vous êtes.
+        <h1 className="font-serif-luxury text-4xl sm:text-6xl md:text-7xl font-light text-white tracking-tight leading-[1.15] mb-6 max-w-4xl">
+          L' excellence du <span className="green-gradient-text italic font-normal">soin automobile</span>
+          <span className="block mt-2 sm:mt-3">Là où vous êtes</span>
         </h1>
 
         {/* Sous-titre Épuré */}
