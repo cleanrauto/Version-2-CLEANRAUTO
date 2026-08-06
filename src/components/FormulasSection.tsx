@@ -25,11 +25,11 @@ export const FormulasSection: React.FC<FormulasSectionProps> = ({ onSelectFormul
             Tarifs & Prestations Clés en Main
           </span>
           <h2 className="font-serif-luxury text-3xl sm:text-5xl font-light text-white tracking-tight mb-6">
-            Nos <span className="green-gradient-text font-normal">Formules de Soin</span>
+            Nos <span className="green-gradient-text">Formules de Soin</span>
           </h2>
           <div className="w-16 h-[1px] bg-[#25D366]/50 mx-auto mb-6" />
-          <p className="text-sm sm:text-base text-[#a0aab8] font-light leading-relaxed">
-            Choisissez votre catégorie d'intervention et adaptez le tarif au gabarit de votre véhicule pour une transparence totale.
+          <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+            Choisissez votre catégorie d'intervention et adaptez le tarif au gabarit de votre véhicule.
           </p>
         </div>
 
@@ -55,13 +55,13 @@ export const FormulasSection: React.FC<FormulasSectionProps> = ({ onSelectFormul
               >
                 <div>
                   <span
-                    className={`block text-xs font-bold ${
+                    className={`block text-xs sm:text-sm font-bold ${
                       selectedVehicle === v.id ? 'text-[#25D366]' : 'text-white'
                     }`}
                   >
                     {v.label}
                   </span>
-                  <span className="text-[10px] text-gray-400 block line-clamp-1 mt-0.5 font-light">
+                  <span className="text-xs text-gray-300 block mt-1 font-normal leading-relaxed break-words">
                     {v.examples}
                   </span>
                 </div>
@@ -110,7 +110,7 @@ export const FormulasSection: React.FC<FormulasSectionProps> = ({ onSelectFormul
               }`}
             >
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Pack Intégral (Combo)</span>
+              <span>Pack Intégral</span>
             </button>
           </div>
         </div>
@@ -157,18 +157,19 @@ export const FormulasSection: React.FC<FormulasSectionProps> = ({ onSelectFormul
                     </div>
                   </div>
 
-                  <h3 className="font-serif-luxury text-2xl font-bold text-white mb-2 group-hover:text-[#25D366] transition-colors">
-                    {formula.name}
+                  <h3 className="font-serif-luxury text-2xl font-bold text-white mb-2 group-hover:text-[#25D366] transition-colors flex items-baseline">
+                    <span>{formula.name}</span>
+                    <span className="text-[#25D366] ml-1.5 font-sans font-bold text-xl">*</span>
                   </h3>
 
-                  <p className="text-xs text-[#a0aab8] font-light leading-relaxed mb-6 italic">
-                    "{formula.tagline}"
+                  <p className="text-xs sm:text-sm text-gray-300 leading-relaxed mb-6">
+                    {formula.tagline}
                   </p>
 
                   {/* Pricing Box */}
                   <div className="py-4 border-y border-white/10 mb-6 bg-white/5 rounded-xl px-4 flex items-baseline justify-between">
                     <div>
-                      <span className="text-[10px] uppercase tracking-wider text-gray-400 block font-medium">
+                      <span className="text-xs uppercase tracking-wider text-gray-300 block font-medium">
                         Tarif ({VEHICLE_OPTIONS.find((v) => v.id === selectedVehicle)?.label})
                       </span>
                       <span className="text-xs text-[#25D366]">Intervention mobile incluse</span>
@@ -191,12 +192,12 @@ export const FormulasSection: React.FC<FormulasSectionProps> = ({ onSelectFormul
 
                   {/* Bullet Points List */}
                   <div className="space-y-3 mb-8">
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-300 block mb-2">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-gray-300 block mb-2">
                       Prestations incluses :
                     </span>
                     {formula.features.map((feature, idx) => (
-                      <div key={idx} className="flex items-start space-x-2.5 text-xs text-[#cbd5e1] leading-relaxed">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-[#25D366] shrink-0 mt-0.5" />
+                      <div key={idx} className="flex items-start space-x-2.5 text-xs sm:text-sm text-gray-200 leading-relaxed">
+                        <CheckCircle2 className="w-4 h-4 text-[#25D366] shrink-0 mt-0.5" />
                         <span>{feature}</span>
                       </div>
                     ))}
@@ -220,11 +221,11 @@ export const FormulasSection: React.FC<FormulasSectionProps> = ({ onSelectFormul
           })}
         </div>
 
-        {/* Bottom Note on Custom Requests */}
-        <div className="mt-12 text-center text-xs text-gray-400 font-light max-w-xl mx-auto flex items-center justify-center space-x-2">
-          <HelpCircle className="w-4 h-4 text-[#25D366] shrink-0" />
-          <span>
-            Véhicule très encrassé, poils d'animaux abondants ou taches profondes ? Un supplément de 20€ à 40€ peut être appliqué après diagnostic visuel.
+        {/* Bottom Note on Custom Requests with Asterisk */}
+        <div className="mt-12 text-center text-xs sm:text-sm text-gray-300 max-w-2xl mx-auto flex items-start justify-center space-x-2 bg-white/5 border border-white/10 rounded-xl p-4">
+          <span className="text-[#25D366] font-bold text-base leading-none mt-0.5">*</span>
+          <span className="leading-relaxed text-left sm:text-center">
+            Véhicule très encrassé, poils d'animaux abondants ou taches profondes : un supplément de 20€ à 40€ peut être appliqué après diagnostic visuel.
           </span>
         </div>
       </div>

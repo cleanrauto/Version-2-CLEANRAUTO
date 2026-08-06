@@ -24,11 +24,11 @@ export const InterventionZone: React.FC<InterventionZoneProps> = ({ onSelectCity
             Mobile à Orange (84) & Départements Proches (30, 26, 13)
           </span>
           <h2 className="font-serif-luxury text-3xl sm:text-5xl font-light text-white tracking-tight mb-6">
-            Zone d' intervention <span className="green-gradient-text italic font-normal">Orange & Alentours</span>
+            Zone d'intervention <span className="green-gradient-text">Orange & Alentours</span>
           </h2>
           <div className="w-16 h-[1px] bg-[#25D366]/50 mx-auto mb-6" />
-          <p className="text-sm sm:text-base text-[#a0aab8] font-light leading-relaxed">
-            Intervention à votre domicile ou sur votre lieu de travail. <strong className="text-white">Frais de déplacement offerts dans un rayon de 10 km</strong> autour d'Orange. Au-delà, un tarif transparent de <strong className="text-[#c5a059] font-bold">0,60€ / km</strong> est appliqué (Vaucluse, Gard, Drôme & Bouches-du-Rhône proches).
+          <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+            Intervention à votre domicile ou sur votre lieu de travail. <strong className="text-white">Frais de déplacement offerts dans un rayon de 10 km</strong> autour d'Orange. Au-delà, un tarif de <strong className="text-[#c5a059] font-bold">0,60€ / km</strong> est appliqué (Vaucluse, Gard, Drôme & Bouches-du-Rhône proches).
           </p>
         </div>
 
@@ -123,23 +123,23 @@ export const InterventionZone: React.FC<InterventionZoneProps> = ({ onSelectCity
                 Intervention directe sur le lieu de votre choix
               </h3>
 
-              <p className="text-xs text-[#a0aab8] leading-relaxed mb-6 font-light">
+              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed mb-6 font-normal">
                 Propriété privée, domaine viticole, entreprise ou parking : notre unité mobile de detailing se déplace à Orange (84) et dans ses alentours proches.
               </p>
 
               {/* Highlights */}
               <div className="space-y-3 mb-8">
-                <div className="flex items-start space-x-2 text-xs text-gray-200">
+                <div className="flex items-start space-x-2 text-xs sm:text-sm text-gray-200">
                   <CheckCircle2 className="w-4 h-4 text-[#25D366] shrink-0 mt-0.5" />
-                  <span>Unité mobile d'intervention entièrement équipée</span>
+                  <span>Intervention directe sur votre lieu de travail ou à domicile</span>
                 </div>
-                <div className="flex items-start space-x-2 text-xs text-gray-200">
+                <div className="flex items-start space-x-2 text-xs sm:text-sm text-gray-200">
                   <CheckCircle2 className="w-4 h-4 text-[#25D366] shrink-0 mt-0.5" />
                   <span>Matériel de detailing haute précision & soin sur-mesure</span>
                 </div>
-                <div className="flex items-start space-x-2 text-xs text-gray-200">
+                <div className="flex items-start space-x-2 text-xs sm:text-sm text-gray-200">
                   <CheckCircle2 className="w-4 h-4 text-[#25D366] shrink-0 mt-0.5" />
-                  <span>Bâches de travail & protections de sol professionnelles</span>
+                  <span>Respect rigoureux de votre véhicule et propreté irréprochable</span>
                 </div>
               </div>
             </div>
@@ -147,7 +147,7 @@ export const InterventionZone: React.FC<InterventionZoneProps> = ({ onSelectCity
             {/* Quick Contact Buttons */}
             <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row gap-3">
               <a
-                href="https://wa.me/33617200516?text=Bonjour,%20je%20souhaite%20verifier%20si%20vous%20intervenez%20dans%20ma%20commune."
+                href="https://wa.me/33617200516?text=Bonjour,%20je%20souhaite%20v%C3%A9rifier%20si%20vous%20intervenez%20dans%20ma%20commune."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 py-3 px-4 rounded-xl bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 text-[#25D366] text-xs font-semibold uppercase tracking-wider flex items-center justify-center space-x-2 transition-all"

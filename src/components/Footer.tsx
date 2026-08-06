@@ -1,5 +1,11 @@
 import React from 'react';
-import { Phone, Mail, MapPin, MessageSquare, Shield, Instagram, Facebook } from 'lucide-react';
+import { Phone, Mail, MapPin, MessageSquare, Shield, Instagram } from 'lucide-react';
+
+const TikTokIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 3 15.68 6.34 6.34 0 0 0 9.34 22a6.32 6.32 0 0 0 6.33-6.33V9a8.16 8.16 0 0 0 4.92 1.63V7.18a4.85 4.85 0 0 1-1-.49z" />
+  </svg>
+);
 
 interface FooterProps {
   onOpenLegal: () => void;
@@ -25,18 +31,22 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenBooking }) =>
 
             <div className="flex items-center space-x-3 pt-2">
               <a
-                href="#"
+                href="https://www.instagram.com/clean.r.auto/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="p-2 rounded-full bg-white/5 hover:bg-[#25D366]/20 text-gray-300 hover:text-[#25D366] border border-white/10 transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram className="w-4 h-4" />
               </a>
               <a
-                href="#"
+                href="https://www.tiktok.com/@cleanr.auto"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="p-2 rounded-full bg-white/5 hover:bg-[#25D366]/20 text-gray-300 hover:text-[#25D366] border border-white/10 transition-colors"
-                aria-label="Facebook"
+                aria-label="TikTok"
               >
-                <Facebook className="w-4 h-4" />
+                <TikTokIcon className="w-4 h-4" />
               </a>
               <a
                 href="https://wa.me/33617200516"
@@ -58,7 +68,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenBooking }) =>
             <ul className="space-y-2 text-xs font-light">
               <li>
                 <a href="#experience" className="hover:text-[#25D366] transition-colors">
-                  L' expérience Clean'R Auto
+                  L'expérience Clean'R Auto
                 </a>
               </li>
               <li>
@@ -73,7 +83,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenBooking }) =>
               </li>
               <li>
                 <a href="#zone" className="hover:text-[#25D366] transition-colors">
-                  Zone d' intervention (Orange 84)
+                  Zone d'intervention (Orange 84)
                 </a>
               </li>
               <li>
@@ -92,7 +102,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenBooking }) =>
           {/* Col 3: Secteur & Villes */}
           <div className="space-y-3">
             <h4 className="text-xs uppercase tracking-[0.2em] font-semibold text-white">
-              Secteur d' intervention
+              Secteur d'intervention
             </h4>
             <ul className="space-y-1.5 text-xs text-gray-400 font-light">
               <li className="text-white font-medium">• Orange (84100) — Cœur de zone</li>
@@ -117,10 +127,10 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenBooking }) =>
                 <span>06 17 20 05 16</span>
               </a>
 
-              <div className="flex items-center space-x-2 text-gray-300">
+              <a href="mailto:contact@cleanrauto.fr" className="flex items-center space-x-2 text-gray-300 hover:text-[#25D366] transition-colors">
                 <Mail className="w-4 h-4 text-[#25D366]" />
                 <span>contact@cleanrauto.fr</span>
-              </div>
+              </a>
 
               <div className="flex items-start space-x-2 text-gray-300">
                 <MapPin className="w-4 h-4 text-[#25D366] shrink-0 mt-0.5" />

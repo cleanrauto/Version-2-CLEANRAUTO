@@ -11,25 +11,25 @@ export const PillarsExperience: React.FC = () => {
       subtitle: 'Sur votre lieu de travail ou à domicile',
       description:
         "Plus besoin de vous déplacer ni d'attendre en station. Notre unité mobile de detailing se déplace à Orange et dans son agglomération. Nous intervenons directement pendant votre journée de travail ou à votre domicile.",
-      highlights: ['Unité mobile totalement équipée', 'Intervention discrète sur parking privé ou villa', 'Gestion souple de votre emploi du temps'],
+      highlights: ['Intervention discrète sur parking privé ou villa', 'Gestion souple de votre emploi du temps'],
     },
     {
       icon: ShieldCheck,
       number: '02',
-      title: 'Chimie de Précision & Mat d\'Origine',
+      title: 'Chimie de précision & mat d\'origine',
       subtitle: 'Régénération des cuirs, alcantara & plastiques',
       description:
         'Nous appliquons des traitements de précision pour raviver la souplesse d’origine de vos selleries sans aucun film gras ou luisant. Les cuirs retrouvent leur aspect mat usine et bénéficient d\'un bouclier anti-UV longue durée.',
-      highlights: ['Effet mat usine & zéro brillance grasse', 'Protection anti-UV contre le dessèchement', 'Action antistatique repousse poussière'],
+      highlights: ['Effet mat usine & zéro brillance grasse', 'Protection anti-UV contre le dessèchement'],
     },
     {
       icon: Gem,
       number: '03',
-      title: 'Finition perfectionniste & Discrétion',
+      title: 'Finition perfectionniste & discrétion',
       subtitle: 'Le souci du détail poussé à son paroxysme',
       description:
         'Chaque véhicule est unique. De la calandre jusqu’au moindre bouton de console centrale, nous appliquons une rigueur d’orfèvre avec pinceaux en crin de cheval, microfibres haute densité et nettoyants spécifiques.',
-      highlights: ['Contrôle qualité rigoureux post-soin', 'Intervention en toute confidentialité', 'Rendu d\'exception garanti'],
+      highlights: ['Contrôle qualité rigoureux post-soin', 'Intervention en toute confidentialité'],
     },
   ];
 
@@ -45,10 +45,10 @@ export const PillarsExperience: React.FC = () => {
             Savoir-Faire & Philosophie
           </span>
           <h2 className="font-serif-luxury text-3xl sm:text-5xl font-light text-white tracking-tight mb-6">
-            L' expérience <span className="green-gradient-text italic font-normal">Clean'R Auto</span>
+            L'expérience <span className="green-gradient-text">Clean'R Auto</span>
           </h2>
           <div className="w-16 h-[1px] bg-[#25D366]/50 mx-auto mb-6" />
-          <p className="text-sm sm:text-base text-[#a0aab8] font-light leading-relaxed">
+          <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
             Inspiré par la sobriété et le raffinement des grandes maisons de luxe, Clean'R Auto réinvente le soin automobile à domicile avec un engagement de qualité sans concession.
           </p>
         </div>
@@ -80,7 +80,7 @@ export const PillarsExperience: React.FC = () => {
                   <p className="text-xs uppercase tracking-wider text-[#25D366] font-medium mb-4">
                     {pillar.subtitle}
                   </p>
-                  <p className="text-xs text-[#a0aab8] leading-relaxed mb-6 font-light">
+                  <p className="text-sm text-gray-300 leading-relaxed mb-6 font-normal">
                     {pillar.description}
                   </p>
                 </div>
@@ -88,8 +88,8 @@ export const PillarsExperience: React.FC = () => {
                 {/* Highlights List */}
                 <ul className="space-y-2.5 pt-4 border-t border-white/10">
                   {pillar.highlights.map((item, idx) => (
-                    <li key={idx} className="flex items-start space-x-2 text-xs text-[#cbd5e1]">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#25D366] shrink-0 mt-0.5" />
+                    <li key={idx} className="flex items-start space-x-2 text-xs sm:text-sm text-gray-200">
+                      <CheckCircle2 className="w-4 h-4 text-[#25D366] shrink-0 mt-0.5" />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -109,21 +109,21 @@ export const PillarsExperience: React.FC = () => {
             <h3 className="font-serif-luxury text-2xl sm:text-3xl text-white">
               Soin des matériaux nobles : cuirs, plastiques & finitions d'exception.
             </h3>
-            <p className="text-xs sm:text-sm text-[#a0aab8] leading-relaxed font-light">
+            <p className="text-sm text-gray-300 leading-relaxed font-normal">
               Les intérieurs haut de gamme associent cuirs délicats, surfaces laquées piano-black et plastiques travaillés. Clean'R Auto applique des formules nourrissantes et dégraissantes professionnelles pour régénérer la souplesse du cuir, éliminer le sébum luisant des volants et apporter une protection anti-UV durable tout en restaurant le rendu mat usine.
             </p>
-            <div className="pt-2 flex flex-wrap gap-3 text-xs text-[#e2e8f0]">
+            <div className="pt-2 flex flex-wrap gap-3 text-xs text-gray-200">
               <div className="flex items-center space-x-2 bg-white/5 px-3 py-2 rounded border border-white/10">
                 <CheckCircle2 className="w-4 h-4 text-[#25D366]" />
-                <span>Restauration du Toucher Mat Usine (Anti-Luisant)</span>
+                <span>Restauration du toucher mat usine (anti-luisant)</span>
               </div>
               <div className="flex items-center space-x-2 bg-white/5 px-3 py-2 rounded border border-white/10">
                 <CheckCircle2 className="w-4 h-4 text-[#25D366]" />
-                <span>Hydratation Cuir & Élimination du Dessèchement</span>
+                <span>Hydratation du cuir & élimination du dessèchement</span>
               </div>
               <div className="flex items-center space-x-2 bg-white/5 px-3 py-2 rounded border border-white/10">
                 <CheckCircle2 className="w-4 h-4 text-[#25D366]" />
-                <span>Protection Anti-UV & Effet Anti-Statique</span>
+                <span>Protection anti-UV & effet antistatique</span>
               </div>
             </div>
           </div>

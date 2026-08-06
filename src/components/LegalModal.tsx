@@ -44,7 +44,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ isOpen, onClose }) => {
               <br />
               <strong>Directeur de la publication :</strong> Clean'R Auto.
               <br />
-              <strong>Contact e-mail :</strong> cleanr.autopro@gmail.com | <strong>Téléphone :</strong> 06 17 20 05 16.
+              <strong>Contact e-mail :</strong> contact@cleanrauto.fr | <strong>Téléphone :</strong> 06 17 20 05 16.
             </p>
           </div>
 

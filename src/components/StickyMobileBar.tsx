@@ -18,7 +18,7 @@ export const StickyMobileBar: React.FC<StickyMobileBarProps> = ({ onOpenBooking 
         </a>
 
         <a
-          href="https://wa.me/33617200516?text=Bonjour%20Clean'R%20Auto,%20je%20souhaite%20reserver%20un%20soin%20automobile."
+          href="https://wa.me/33617200516?text=Bonjour%20Clean'R%20Auto,%20je%20souhaite%20r%C3%A9server%20un%20soin%20automobile."
           target="_blank"
           rel="noopener noreferrer"
           className="flex-1 py-2.5 px-3 rounded-xl bg-[#25D366]/20 text-[#25D366] text-[11px] font-semibold uppercase tracking-wider flex items-center justify-center space-x-1.5 border border-[#25D366]/40"

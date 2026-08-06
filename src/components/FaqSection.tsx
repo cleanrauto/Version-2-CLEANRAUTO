@@ -14,14 +14,11 @@ export const FaqSection: React.FC = () => {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs uppercase tracking-[0.25em] text-[#25D366] font-semibold block mb-3">
-            Questions Fréquentes
-          </span>
           <h2 className="font-serif-luxury text-3xl sm:text-5xl font-light text-white tracking-tight mb-6">
-            Foire Aux <span className="green-gradient-text italic font-normal">Questions</span>
+            Foire aux <span className="green-gradient-text">Questions</span>
           </h2>
           <div className="w-16 h-[1px] bg-[#25D366]/50 mx-auto mb-6" />
-          <p className="text-sm sm:text-base text-[#a0aab8] font-light leading-relaxed">
+          <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
             Tout ce qu'il faut savoir sur l'organisation de nos interventions de soin et detailing à domicile à Orange et alentours.
           </p>
         </div>
@@ -42,7 +39,7 @@ export const FaqSection: React.FC = () => {
                 >
                   <div className="flex items-center space-x-3">
                     <HelpCircle className="w-4 h-4 text-[#25D366] shrink-0" />
-                    <span className="text-sm font-semibold text-white">
+                    <span className="text-sm sm:text-base font-semibold text-white">
                       {faq.question}
                     </span>
                   </div>
@@ -54,9 +51,9 @@ export const FaqSection: React.FC = () => {
                 </button>
 
                 {isOpen && (
-                  <div className="px-6 pb-6 pt-2 text-xs sm:text-sm text-[#a0aab8] font-light leading-relaxed border-t border-white/5 bg-black/40 animate-fadeIn">
+                  <div className="px-6 pb-6 pt-3 text-xs sm:text-sm text-gray-300 font-normal leading-relaxed border-t border-white/5 bg-black/40 animate-fadeIn">
                     <p>{faq.answer}</p>
-                    <span className="inline-block mt-3 text-[10px] uppercase tracking-widest text-[#25D366] font-semibold">
+                    <span className="inline-block mt-3 text-[11px] uppercase tracking-widest text-[#25D366] font-semibold">
                       Catégorie : {faq.category}
                     </span>
                   </div>
@@ -71,7 +68,7 @@ export const FaqSection: React.FC = () => {
           <h3 className="font-serif-luxury text-2xl text-white mb-2">
             Une question spécifique sur votre véhicule ?
           </h3>
-          <p className="text-xs text-gray-400 font-light mb-6">
+          <p className="text-xs sm:text-sm text-gray-300 mb-6">
             Notre équipe se tient à votre entière disposition pour vous conseiller le soin le plus adapté.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -84,7 +81,7 @@ export const FaqSection: React.FC = () => {
             </a>
 
             <a
-              href="https://wa.me/33617200516?text=Bonjour%20Clean'R%20Auto,%20j'ai%20une%20question%20concernant%20mon%20vehicule."
+              href="https://wa.me/33617200516?text=Bonjour%20Clean'R%20Auto,%20j'ai%20une%20question%20concernant%20mon%20v%C3%A9hicule."
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#25D366] text-black text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2"

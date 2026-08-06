@@ -56,7 +56,8 @@ export const FAQS: FaqItem[] = [
   {
     category: 'Logistique & Déplacement',
     question: 'Quelles sont les villes couvertes sans frais supplémentaires ?',
-    answer: 'Les frais de déplacement sont entièrement offerts dans un rayon de 10 km autour d\'Orange (Orange, Piolenc, Camaret-sur-Aigues, Courthézon, Sérignan-du-Comtat, Châteauneuf-du-Pape et Jonquières). Au-delà de 10 km, un tarif transparent de 0,60€ par kilomètre supplémentaire est appliqué.',
+    answer:
+      'Les frais de déplacement sont entièrement offerts dans un rayon de 10 km autour d\'Orange (Orange, Piolenc, Camaret-sur-Aigues, Courthézon, Sérignan-du-Comtat, Châteauneuf-du-Pape et Jonquières). Au-delà de 10 km, un tarif de 0,60€ par kilomètre supplémentaire est appliqué.',
   },
   {
     category: 'Soin & Matériaux',

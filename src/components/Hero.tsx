@@ -1,6 +1,6 @@
 import React from 'react';
-import { Sparkles, MapPin, ChevronDown, ShieldCheck, Clock, Award } from 'lucide-react';
-import heroImgPath from '../assets/images/cleanr_hero_detail_1785743158188.jpg';
+import { Sparkles, MapPin, ChevronDown, ShieldCheck, Clock, Award, Phone } from 'lucide-react';
+import heroImgPath from '../assets/images/hero_car_luxury_1786020041468.jpg';
 
 interface HeroProps {
   onOpenBooking: () => void;
@@ -13,12 +13,14 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
       <div className="absolute inset-0 z-0">
         <img
           src={heroImgPath}
-          alt="Lavage et soin automobile haut de gamme Clean'R Auto"
-          className="w-full h-full object-cover object-center scale-105 filter brightness-75 contrast-110"
+          alt="Soin et detailing automobile de prestige Clean'R Auto"
+          className="w-full h-full object-cover object-center scale-105 filter brightness-90 contrast-105"
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0b0c0e] via-[#0b0c0e]/75 to-[#0b0c0e]/60" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#0b0c0e]/40 to-[#0b0c0e]" />
+        {/* Subtle Dark Overlays for Text Legibility */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0b0c0e] via-[#0b0c0e]/65 to-[#0b0c0e]/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0b0c0e]/80 via-transparent to-[#0b0c0e]/60" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#0b0c0e]/30 to-[#0b0c0e]" />
       </div>
 
       {/* Decorative Subtle Green Glow */}
@@ -35,12 +37,12 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
 
         {/* Titre Raffiné avec Serif */}
         <h1 className="font-serif-luxury text-4xl sm:text-6xl md:text-7xl font-light text-white tracking-tight leading-[1.15] mb-6 max-w-4xl">
-          L' excellence du <span className="green-gradient-text font-normal">soin automobile</span>
+          L'excellence du <span className="green-gradient-text">soin automobile</span>
           <span className="block mt-2 sm:mt-3">Là où vous êtes</span>
         </h1>
 
         {/* Sous-titre Épuré */}
-        <p className="text-base sm:text-xl text-[#cbd5e1] font-light max-w-2xl leading-relaxed mb-10">
+        <p className="text-base sm:text-lg text-[#cbd5e1] font-light max-w-2xl leading-relaxed mb-10">
           Clean'R Auto sublime et protège votre véhicule d'exception. Service de detailing mobile haut de gamme et sur-mesure à Orange (84) et ses alentours.
         </p>
 
@@ -69,8 +71,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div className="text-left">
-              <span className="block text-xs uppercase tracking-wider text-gray-400 font-medium">Unité Mobile Équipée</span>
-              <span className="text-sm font-semibold text-white">Matériel & Soins Sur-Mesure</span>
+              <span className="block text-xs uppercase tracking-wider text-gray-300 font-medium">Déplacement Sur-Mesure</span>
+              <span className="text-sm font-semibold text-white">Matériel & Soins Dédiés</span>
             </div>
           </div>
 
@@ -79,7 +81,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
               <Award className="w-5 h-5" />
             </div>
             <div className="text-left">
-              <span className="block text-xs uppercase tracking-wider text-gray-400 font-medium">Exigence Haute Couture</span>
+              <span className="block text-xs uppercase tracking-wider text-gray-300 font-medium">Exigence Haute Couture</span>
               <span className="text-sm font-semibold text-white">Satisfaction Client 5.0 ★</span>
             </div>
           </div>
@@ -89,7 +91,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
               <Clock className="w-5 h-5" />
             </div>
             <div className="text-left">
-              <span className="block text-xs uppercase tracking-wider text-gray-400 font-medium">Gain de Temps Total</span>
+              <span className="block text-xs uppercase tracking-wider text-gray-300 font-medium">Gain de Temps Total</span>
               <span className="text-sm font-semibold text-white">Domicile & Lieu de Travail</span>
             </div>
           </div>

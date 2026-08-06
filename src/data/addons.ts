@@ -2,13 +2,22 @@ import { AddonOption } from '../types';
 
 export const ADDONS: AddonOption[] = [
   {
-    id: 'seat-shampoo',
-    name: 'Shampouinage Sièges AV / AR',
-    tagline: 'Nettoyage en profondeur par injecteur-extracteur des sièges avant & arrière',
+    id: 'seat-shampoo-front',
+    name: 'Shampouinage Sièges Avant (+15€)',
+    tagline: 'Nettoyage injecteur-extracteur des 2 sièges avant',
     price: 15,
-    description: 'Extraction des salissures, auréoles et taches incrustées dans les fibres textiles des sièges avant et arrière.',
+    description: 'Extraction en profondeur des salissures, auréoles et taches incrustées sur les sièges avant (+15€).',
     icon: 'Droplets',
-    badge: 'Inclus en Prestige',
+    badge: '+15€ Avant',
+  },
+  {
+    id: 'seat-shampoo-rear',
+    name: 'Shampouinage Sièges Arrière (+15€)',
+    tagline: 'Nettoyage injecteur-extracteur de la banquette arrière',
+    price: 15,
+    description: 'Extraction en profondeur des salissures et taches incrustées sur la banquette / sièges arrière (+15€).',
+    icon: 'Droplets',
+    badge: '+15€ Arrière',
   },
   {
     id: 'ext-essentiel-option',

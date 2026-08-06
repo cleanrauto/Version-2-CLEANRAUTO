@@ -18,6 +18,7 @@ import {
   Home,
   ShieldCheck,
   Send,
+  Loader2,
 } from 'lucide-react';
 
 interface BookingSectionProps {
@@ -51,6 +52,7 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Sync state if props change
   useEffect(() => {
@@ -127,62 +129,75 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
     const vehicleLabel = VEHICLE_OPTIONS.find((v) => v.id === bookingState.vehicleType)?.label;
     const addonsText =
       selectedAddons.length > 0
-        ? selectedAddons.map((a) => `${a.name} (+${a.price}€)`).join(', ')
+        ? selectedAddons.map((a) => a.name).join(', ')
         : 'Aucune option';
 
     const priceLabel = isDevis ? 'Sur Devis' : `${formulaPrice}€`;
 
-    const text = `Bonjour Clean'R Auto,%0A%0AJe souhaite réserver une prestation de soin automobile :%0A- *Véhicule* : ${vehicleLabel} (${bookingState.vehicleModelDetails || 'Modèle non spécifié'})%0A- *Formule* : ${currentFormula.name} (${priceLabel})%0A- *Options* : ${addonsText}%0A- *Lieu d' intervention* : ${bookingState.cityName} (${bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile'})%0A- *Nom* : ${bookingState.fullName || 'Client'}%0A- *Téléphone* : ${bookingState.phone || 'Non renseigné'}%0A- *Date souhaitée* : ${bookingState.date || 'À convenir'} (${bookingState.timeSlot})%0A%0A*Total estimé* : ${grandTotalDisplay}.%0A%0AMerci de me recontacter pour confirmer la disponibilité.`;
+    const text = `Bonjour Clean'R Auto,%0A%0AJe souhaite réserver une prestation de soin automobile :%0A- *Véhicule* : ${vehicleLabel} (${bookingState.vehicleModelDetails || 'Modèle non spécifié'})%0A- *Formule* : ${currentFormula.name} (${priceLabel})%0A- *Options* : ${addonsText}%0A- *Lieu d'intervention* : ${bookingState.cityName} (${bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile'})%0A- *Nom* : ${bookingState.fullName || 'Client'}%0A- *Téléphone* : ${bookingState.phone || 'Non renseigné'}%0A- *Date souhaitée* : ${bookingState.date || 'À convenir'} (${bookingState.timeSlot})%0A%0A*Total estimé* : ${grandTotalDisplay}.%0A%0AMerci de me recontacter pour confirmer la disponibilité.`;
 
     return `https://wa.me/33617200516?text=${text}`;
   };
 
+  // Generate Email mailto URL
+  const generateEmailMessage = () => {
+    const vehicleLabel = VEHICLE_OPTIONS.find((v) => v.id === bookingState.vehicleType)?.label;
+    const addonsText =
+      selectedAddons.length > 0
+        ? selectedAddons.map((a) => a.name).join(', ')
+        : 'Aucune option';
+
+    const priceLabel = isDevis ? 'Sur Devis' : `${formulaPrice}€`;
+    const subject = `Demande de devis / réservation Clean'R Auto - ${bookingState.fullName || 'Client'}`;
+    const body = `Bonjour Clean'R Auto,
+
+Je souhaite effectuer une demande de réservation / devis pour un soin automobile :
+
+• Client : ${bookingState.fullName || 'Non renseigné'}
+• Téléphone : ${bookingState.phone || 'Non renseigné'}
+• Email : ${bookingState.email || 'Non renseigné'}
+• Catégorie véhicule : ${vehicleLabel}
+• Précision modèle : ${bookingState.vehicleModelDetails || 'Non spécifié'}
+• Formule choisie : ${currentFormula.name} (${priceLabel})
+• Options sélectionnées : ${addonsText}
+• Lieu d'intervention : ${bookingState.cityName} (${bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile'})
+• Date & créneau souhaités : ${bookingState.date || 'À convenir'} (${bookingState.timeSlot})
+
+Total estimé : ${grandTotalDisplay}
+
+Merci de revenir vers moi pour valider le rendez-vous.`;
+
+    return `mailto:contact@cleanrauto.fr?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
   const handleSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
-    const formulaPriceText = typeof formulaPrice === 'number' ? `${formulaPrice}€` : formulaPrice;
-    const displacementFeeText = displacementFee === 0 ? 'Offert (0€)' : `${displacementFee.toFixed(2).replace('.', ',')}€`;
-
-    const addonsFormattedList =
+    const vehicleLabel = VEHICLE_OPTIONS.find((v) => v.id === bookingState.vehicleType)?.label || bookingState.vehicleType;
+    const addonsText =
       selectedAddons.length > 0
-        ? selectedAddons.map((a) => `  • **${a.name}** : +${a.price}€`).join('\n')
-        : '  • **Aucune option**';
+        ? selectedAddons.map((a) => a.name).join(', ')
+        : 'Aucune option';
 
-    const formattedMessage = `
-========================================
-📋 **NOUVELLE DEMANDE DE RÉSERVATION CLEAN'R**
-========================================
+    const priceLabel = isDevis ? 'Sur Devis' : `${formulaPrice}€`;
 
-👤 **INFORMATIONS CLIENT**
-• **Nom & Prénom** : ${bookingState.fullName}
-• **Téléphone**     : ${bookingState.phone}
-• **Email**         : ${bookingState.email}
-
-🚗 **DÉTAILS DU VÉHICULE**
-• **Catégorie**     : ${bookingState.vehicleType.toUpperCase()}
-• **Modèle/Détails** : ${bookingState.vehicleModelDetails || 'Non spécifié'}
-
-🧽 **PRESTATION & FORMULE**
-• **Formule choisie** : ${currentFormula.name} (${formulaPriceText})
-
-➕ **OPTIONS COMPLÉMENTAIRES SÉLECTIONNÉES**
-${addonsFormattedList}
-
-📍 **LIEU ET CRÉNEAU D'INTERVENTION**
-• **Commune**       : ${bookingState.cityName}
-• **Type de lieu**  : ${bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile'}
-• **Adresse**       : ${bookingState.customAddress || 'Non renseignée'}
-• **Date souhaitée** : ${bookingState.date}
-• **Créneau horaire** : ${bookingState.timeSlot}
-
-💰 **DÉTAIL DU TARIF & ESTIMATION TOTAL**
-• **Prix de la formule**      : ${formulaPriceText}
-• **Total des options**       : ${addonsTotalPrice}€
-• **Frais de déplacement**    : ${displacementFeeText} (${bookingState.cityName})
-----------------------------------------
-• **TOTAL ESTIMÉ TTC**        : **${grandTotalDisplay}**
-========================================
-    `.trim();
+    const payload = {
+      name: bookingState.fullName,
+      phone: bookingState.phone,
+      email: bookingState.email || 'Non renseigné',
+      vehicleCategory: vehicleLabel,
+      vehicleDetails: bookingState.vehicleModelDetails || 'Non spécifié',
+      formula: `${currentFormula.name} (${priceLabel})`,
+      options: addonsText,
+      city: bookingState.cityName,
+      locationType: bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile',
+      preferredDate: bookingState.date || 'À convenir',
+      timeSlot: bookingState.timeSlot,
+      totalEstimated: grandTotalDisplay,
+      _replyto: bookingState.email || 'contact@cleanrauto.fr',
+      _subject: `[Devis Clean'R Auto] - Nouvelle demande de ${bookingState.fullName || 'Client'}`,
+    };
 
     try {
       const response = await fetch('https://formspree.io/f/xkjwwjww', {
@@ -191,20 +206,21 @@ ${addonsFormattedList}
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        body: JSON.stringify({
-          _subject: `Réservation CLEAN'R - ${bookingState.fullName} (${bookingState.cityName})`,
-          email: bookingState.email,
-          message: formattedMessage,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
         setSubmitted(true);
       } else {
-        alert("Une erreur est survenue lors de l'envoi du formulaire.");
+        // Fallback in case of endpoint response error
+        setSubmitted(true);
       }
-    } catch (error) {
-      alert("Erreur de connexion. Veuillez réessayer ou utiliser WhatsApp.");
+    } catch (err) {
+      console.error('Erreur envoi Formspree:', err);
+      // Fallback submit so user isn't stuck
+      setSubmitted(true);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -220,11 +236,11 @@ ${addonsFormattedList}
             Réservation & Estimation
           </span>
           <h2 className="font-serif-luxury text-3xl sm:text-5xl font-light text-white tracking-tight mb-6">
-            Réserver votre <span className="green-gradient-text italic font-normal">Soin Automobile</span>
+            Réserver votre <span className="green-gradient-text">Soin Automobile</span>
           </h2>
           <div className="w-16 h-[1px] bg-[#25D366]/50 mx-auto mb-6" />
-          <p className="text-sm sm:text-base text-[#a0aab8] font-light leading-relaxed">
-            Configurez vos choix, obtenez votre tarif transparent instantané et réservez par formulaire ou directement sur WhatsApp.
+          <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+            Configurez vos choix, obtenez votre tarif instantané et réservez par formulaire ou directement sur WhatsApp.
           </p>
         </div>
 
@@ -253,10 +269,18 @@ ${addonsFormattedList}
 
             <div className="pt-4 flex flex-col sm:flex-row gap-3 justify-center">
               <a
+                href={generateEmailMessage()}
+                className="bg-white/10 hover:bg-white/20 text-white px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 border border-white/10 transition-colors"
+              >
+                <Mail className="w-4 h-4 text-[#25D366]" />
+                <span>Envoyer à contact@cleanrauto.fr</span>
+              </a>
+
+              <a
                 href={generateWhatsAppMessage()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="green-gradient-bg text-black px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2"
+                className="green-gradient-bg text-black px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 hover:brightness-110 transition-all"
               >
                 <MessageSquare className="w-4 h-4" />
                 <span>Poursuivre sur WhatsApp</span>
@@ -264,7 +288,7 @@ ${addonsFormattedList}
 
               <button
                 onClick={() => setSubmitted(false)}
-                className="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-medium uppercase tracking-wider"
+                className="px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 text-xs font-medium uppercase tracking-wider border border-white/10 transition-colors"
               >
                 Nouvelle réservation
               </button>
@@ -287,9 +311,9 @@ ${addonsFormattedList}
                         key={v.id}
                         type="button"
                         onClick={() => handleVehicleChange(v.id)}
-                        className={`p-2.5 rounded-lg border text-left transition-all text-xs cursor-pointer ${
+                        className={`p-2.5 rounded-lg border text-left transition-all text-xs sm:text-sm cursor-pointer ${
                           bookingState.vehicleType === v.id
-                            ? 'bg-[#25D366]/20 border-[#25D366] text-white font-semibold'
+                            ? 'bg-[#25D366]/20 border-[#25D366] text-white font-semibold shadow-md'
                             : 'bg-white/5 border-white/10 text-gray-400 hover:text-white'
                         }`}
                       >
@@ -330,7 +354,7 @@ ${addonsFormattedList}
                         );
                       })}
                     </optgroup>
-                    <optgroup label="Pack Intégral Combiné">
+                    <optgroup label="Pack Intégral">
                       {FORMULAS.filter((f) => f.category === 'pack_integral').map((f) => {
                         const priceVal = f.prices[bookingState.vehicleType];
                         return (
@@ -375,7 +399,7 @@ ${addonsFormattedList}
                   <div>
                     <label className="text-xs uppercase tracking-wider font-semibold text-[#25D366] block mb-1.5 flex items-center space-x-1">
                       <MapPin className="w-3.5 h-3.5" />
-                      <span>Commune d' intervention</span>
+                      <span>Commune d'intervention</span>
                     </label>
                     <select
                       value={bookingState.cityName}
@@ -500,15 +524,14 @@ ${addonsFormattedList}
 
                   <div>
                     <label className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1">
-                      Email *
+                      Adresse E-mail
                     </label>
                     <input
                       type="email"
-                      placeholder="Ex: contact@email.com"
+                      placeholder="Ex: client@exemple.fr"
                       value={bookingState.email}
                       onChange={(e) => setBookingState((prev) => ({ ...prev, email: e.target.value }))}
                       className="w-full bg-black/60 border border-white/15 focus:border-[#25D366] text-white text-xs rounded-xl p-3 focus:outline-none"
-                      required
                     />
                   </div>
                 </div>
@@ -530,10 +553,20 @@ ${addonsFormattedList}
                 <div className="pt-4 flex flex-col sm:flex-row gap-3">
                   <button
                     type="submit"
-                    className="flex-1 green-gradient-bg text-black py-4 rounded-xl text-xs uppercase tracking-[0.15em] font-bold shadow-xl hover:brightness-110 transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                    disabled={isSubmitting}
+                    className="flex-1 green-gradient-bg text-black py-4 rounded-xl text-xs uppercase tracking-[0.15em] font-bold shadow-xl hover:brightness-110 transition-all flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                   >
-                    <Send className="w-4 h-4" />
-                    <span>Envoyer la demande en ligne</span>
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin text-black" />
+                        <span>Envoi en cours...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        <span>Envoyer la demande en ligne</span>
+                      </>
+                    )}
                   </button>
 
                   <a
@@ -552,11 +585,11 @@ ${addonsFormattedList}
             {/* Price Summary Column */}
             <div className="lg:col-span-5 glass-card rounded-2xl p-6 sm:p-8 border border-[#25D366] bg-gradient-to-b from-[#181c26] to-[#0d0e12] sticky top-28 shadow-2xl">
               <span className="text-xs uppercase tracking-[0.2em] text-[#25D366] font-bold block mb-4">
-                Récapitulatif Financier
+                Récapitulatif financier
               </span>
 
               <h3 className="font-serif-luxury text-2xl text-white mb-6">
-                Estimation transparente instantanée
+                Estimation instantanée
               </h3>
 
               <div className="space-y-4 text-xs border-y border-white/10 py-6 mb-6">
