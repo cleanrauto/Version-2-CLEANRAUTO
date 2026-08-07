@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, MapPin, ChevronDown, ShieldCheck, Clock, Award, Phone } from 'lucide-react';
+import { Sparkles, ChevronDown, ShieldCheck, Clock, Award } from 'lucide-react';
 import heroImgPath from '../assets/images/hero_car_luxury_1786020041468.jpg';
 
 interface HeroProps {
@@ -8,7 +8,7 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
   return (
-    <section className="relative min-h-screen pt-28 pb-16 flex flex-col justify-center overflow-hidden bg-[#0b0c0e]">
+    <section className="relative min-h-screen pt-20 sm:pt-24 pb-12 flex flex-col justify-center overflow-hidden bg-[#0b0c0e]">
       {/* Background Image with Gradient Overlay */}
       <div className="absolute inset-0 z-0">
         <img
@@ -27,14 +27,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#25D366]/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
-        {/* Badge Haute Qualité */}
-        <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-black/60 border border-[#25D366]/40 backdrop-blur-md mb-6 animate-fadeIn">
-          <MapPin className="w-3.5 h-3.5 text-[#25D366]" />
-          <span className="text-xs uppercase tracking-[0.2em] font-medium text-[#e2e8f0]">
-            Intervention à domicile à <strong className="text-[#25D366]">Orange, Vaucluse</strong> et départements voisins.
-          </span>
-        </div>
-
         {/* Titre Raffiné avec Serif */}
         <h1 className="font-serif-luxury text-4xl sm:text-6xl md:text-7xl font-light text-white tracking-tight leading-[1.15] mb-6 max-w-4xl">
           L'excellence du <span className="green-gradient-text">soin automobile</span>

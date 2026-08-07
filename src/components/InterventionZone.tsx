@@ -9,11 +9,13 @@ interface InterventionZoneProps {
 export const InterventionZone: React.FC<InterventionZoneProps> = ({ onSelectCity }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredCities = INTERVENTION_CITIES.filter(
-    (c) =>
-      c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.zipCode.includes(searchTerm)
-  );
+  const filteredCities = [...INTERVENTION_CITIES]
+    .sort((a, b) => a.fee - b.fee || a.distanceKm - b.distanceKm)
+    .filter(
+      (c) =>
+        c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        c.zipCode.includes(searchTerm)
+    );
 
   return (
     <section id="zone" className="py-24 bg-[#0e1015] relative overflow-hidden border-t border-white/5">

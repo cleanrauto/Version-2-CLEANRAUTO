@@ -12,7 +12,7 @@ export function calculateDisplacementFee(distanceKm: number): number {
 }
 
 export const INTERVENTION_CITIES: InterventionCity[] = [
-  // Vaucluse (84) - Cœur & Alentours Proches (< 10 km)
+  // Frais 0€ — Rayon de 10 km (Frais de déplacement offerts)
   {
     name: 'Orange',
     zipCode: '84100',
@@ -63,7 +63,7 @@ export const INTERVENTION_CITIES: InterventionCity[] = [
     distanceKm: 10,
   },
 
-  // Vaucluse (84) - > 10 km (0.60€/km au-delà de 10km)
+  // Frais par ordre de prix croissant (0,60€/km au-delà de 10 km)
   {
     name: 'Uchaux',
     zipCode: '84100',
@@ -86,10 +86,31 @@ export const INTERVENTION_CITIES: InterventionCity[] = [
     distanceKm: 14,
   },
   {
+    name: 'Roquemaure (Gard)',
+    zipCode: '30150',
+    fee: calculateDisplacementFee(14),
+    freeLimitNote: 'Gard (30) — 0,60€/km au-delà de 10 km',
+    distanceKm: 14,
+  },
+  {
+    name: 'Saint-Laurent-des-Arbres (Gard)',
+    zipCode: '30126',
+    fee: calculateDisplacementFee(16),
+    freeLimitNote: 'Gard (30) — 0,60€/km au-delà de 10 km',
+    distanceKm: 16,
+  },
+  {
     name: 'Sorgues',
     zipCode: '84700',
     fee: calculateDisplacementFee(18),
     freeLimitNote: 'Calculé à 0,60€/km au-delà de 10 km',
+    distanceKm: 18,
+  },
+  {
+    name: 'Suze-la-Rousse (Drôme)',
+    zipCode: '26790',
+    fee: calculateDisplacementFee(18),
+    freeLimitNote: 'Drôme (26) — 0,60€/km au-delà de 10 km',
     distanceKm: 18,
   },
   {
@@ -121,36 +142,6 @@ export const INTERVENTION_CITIES: InterventionCity[] = [
     distanceKm: 24,
   },
   {
-    name: 'Avignon',
-    zipCode: '84000',
-    fee: calculateDisplacementFee(27),
-    freeLimitNote: 'Calculé à 0,60€/km au-delà de 10 km',
-    distanceKm: 27,
-  },
-  {
-    name: 'Cavaillon',
-    zipCode: '84300',
-    fee: calculateDisplacementFee(40),
-    freeLimitNote: 'Calculé à 0,60€/km au-delà de 10 km',
-    distanceKm: 40,
-  },
-
-  // Gard (30)
-  {
-    name: 'Roquemaure (Gard)',
-    zipCode: '30150',
-    fee: calculateDisplacementFee(14),
-    freeLimitNote: 'Gard (30) — 0,60€/km au-delà de 10 km',
-    distanceKm: 14,
-  },
-  {
-    name: 'Saint-Laurent-des-Arbres (Gard)',
-    zipCode: '30126',
-    fee: calculateDisplacementFee(16),
-    freeLimitNote: 'Gard (30) — 0,60€/km au-delà de 10 km',
-    distanceKm: 16,
-  },
-  {
     name: 'Bagnols-sur-Cèze (Gard)',
     zipCode: '30200',
     fee: calculateDisplacementFee(26),
@@ -164,14 +155,12 @@ export const INTERVENTION_CITIES: InterventionCity[] = [
     freeLimitNote: 'Gard (30) — 0,60€/km au-delà de 10 km',
     distanceKm: 26,
   },
-
-  // Drôme (26)
   {
-    name: 'Suze-la-Rousse (Drôme)',
-    zipCode: '26790',
-    fee: calculateDisplacementFee(18),
-    freeLimitNote: 'Drôme (26) — 0,60€/km au-delà de 10 km',
-    distanceKm: 18,
+    name: 'Avignon',
+    zipCode: '84000',
+    fee: calculateDisplacementFee(27),
+    freeLimitNote: 'Calculé à 0,60€/km au-delà de 10 km',
+    distanceKm: 27,
   },
   {
     name: 'Pierrelatte (Drôme)',
@@ -181,19 +170,24 @@ export const INTERVENTION_CITIES: InterventionCity[] = [
     distanceKm: 30,
   },
   {
-    name: 'Montélimar (Drôme)',
-    zipCode: '26200',
-    fee: calculateDisplacementFee(48),
-    freeLimitNote: 'Drôme (26) — 0,60€/km au-delà de 10 km',
-    distanceKm: 48,
-  },
-
-  // Bouches-du-Rhône (13)
-  {
     name: 'Châteaurenard (13)',
     zipCode: '13160',
     fee: calculateDisplacementFee(32),
     freeLimitNote: 'Bouches-du-Rhône (13) — 0,60€/km au-delà de 10 km',
     distanceKm: 32,
+  },
+  {
+    name: 'Cavaillon',
+    zipCode: '84300',
+    fee: calculateDisplacementFee(40),
+    freeLimitNote: 'Calculé à 0,60€/km au-delà de 10 km',
+    distanceKm: 40,
+  },
+  {
+    name: 'Montélimar (Drôme)',
+    zipCode: '26200',
+    fee: calculateDisplacementFee(48),
+    freeLimitNote: 'Drôme (26) — 0,60€/km au-delà de 10 km',
+    distanceKm: 48,
   },
 ];

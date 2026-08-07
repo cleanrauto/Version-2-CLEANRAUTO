@@ -157,9 +157,8 @@ export const FormulasSection: React.FC<FormulasSectionProps> = ({ onSelectFormul
                     </div>
                   </div>
 
-                  <h3 className="font-serif-luxury text-2xl font-bold text-white mb-2 group-hover:text-[#25D366] transition-colors flex items-baseline">
-                    <span>{formula.name}</span>
-                    <span className="text-[#25D366] ml-1.5 font-sans font-bold text-xl">*</span>
+                  <h3 className="font-serif-luxury text-2xl font-bold text-white mb-2 group-hover:text-[#25D366] transition-colors">
+                    {formula.name}
                   </h3>
 
                   <p className="text-xs sm:text-sm text-gray-300 leading-relaxed mb-6">
@@ -167,7 +166,7 @@ export const FormulasSection: React.FC<FormulasSectionProps> = ({ onSelectFormul
                   </p>
 
                   {/* Pricing Box */}
-                  <div className="py-4 border-y border-white/10 mb-6 bg-white/5 rounded-xl px-4 flex items-baseline justify-between">
+                  <div className="py-4 border-y border-white/10 mb-6 bg-white/5 rounded-xl px-4 flex items-center justify-between">
                     <div>
                       <span className="text-xs uppercase tracking-wider text-gray-300 block font-medium">
                         Tarif ({VEHICLE_OPTIONS.find((v) => v.id === selectedVehicle)?.label})
@@ -176,12 +175,16 @@ export const FormulasSection: React.FC<FormulasSectionProps> = ({ onSelectFormul
                     </div>
                     <div className="text-right">
                       {typeof currentPrice === 'number' ? (
-                        <>
-                          <span className="font-serif-luxury text-3xl sm:text-4xl font-bold text-white">
-                            {currentPrice}€
+                        <div className="flex items-baseline justify-end gap-1">
+                          <span className="font-serif-luxury text-3xl sm:text-4xl font-bold text-white tracking-tight">
+                            {currentPrice}€<span className="text-[#25D366] text-xl sm:text-2xl font-sans font-bold ml-0.5">*</span>
                           </span>
-                          <span className="text-xs text-gray-400 font-light block">TTC</span>
-                        </>
+                          {(formula.category === 'interieur' || formula.category === 'pack_integral') && (
+                            <span className="text-xs text-gray-400 font-medium tracking-wider uppercase ml-0.5">
+                              TTC
+                            </span>
+                          )}
+                        </div>
                       ) : (
                         <span className="font-serif-luxury text-xl font-bold text-[#25D366] uppercase tracking-wider">
                           Sur Devis

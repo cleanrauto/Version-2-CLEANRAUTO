@@ -5,8 +5,8 @@ import whiteLeatherImgPath from '../assets/images/lhd_white_interior_closeup_178
 export const PillarsExperience: React.FC = () => {
   const pillars = [
     {
+      id: 'gain-temps',
       icon: Clock,
-      number: '01',
       title: 'Gain de temps absolu',
       subtitle: 'Sur votre lieu de travail ou à domicile',
       description:
@@ -14,8 +14,8 @@ export const PillarsExperience: React.FC = () => {
       highlights: ['Intervention discrète sur parking privé ou villa', 'Gestion souple de votre emploi du temps'],
     },
     {
+      id: 'chimie-precision',
       icon: ShieldCheck,
-      number: '02',
       title: 'Chimie de précision & mat d\'origine',
       subtitle: 'Régénération des cuirs, alcantara & plastiques',
       description:
@@ -23,8 +23,8 @@ export const PillarsExperience: React.FC = () => {
       highlights: ['Effet mat usine & zéro brillance grasse', 'Protection anti-UV contre le dessèchement'],
     },
     {
+      id: 'finition-perfectionniste',
       icon: Gem,
-      number: '03',
       title: 'Finition perfectionniste & discrétion',
       subtitle: 'Le souci du détail poussé à son paroxysme',
       description:
@@ -59,18 +59,15 @@ export const PillarsExperience: React.FC = () => {
             const Icon = pillar.icon;
             return (
               <div
-                key={pillar.number}
+                key={pillar.id}
                 className="glass-card rounded-xl p-8 flex flex-col justify-between transition-all duration-300 hover:border-[#25D366]/50 group relative hover:-translate-y-1"
               >
                 <div>
-                  {/* Top Bar with Number and Icon */}
-                  <div className="flex items-center justify-between mb-8">
+                  {/* Top Bar with Icon */}
+                  <div className="flex items-center mb-6">
                     <div className="p-3.5 rounded-lg bg-[#25D366]/10 text-[#25D366] border border-[#25D366]/20 group-hover:scale-110 transition-transform">
                       <Icon className="w-6 h-6" />
                     </div>
-                    <span className="font-cinzel text-2xl font-bold text-white/20 group-hover:text-[#25D366]/40 transition-colors">
-                      {pillar.number}
-                    </span>
                   </div>
 
                   {/* Titles */}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, Mail, MapPin } from 'lucide-react';
+import { Phone, Mail, MapPin, Shield } from 'lucide-react';
 
 const InstagramIcon: React.FC<{ className?: string }> = ({ className = 'w-5 h-5' }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -34,13 +34,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenBooking }) =>
             <p className="text-xs text-gray-400 font-light leading-relaxed">
               L'art du détail automobile, lavage de précision pour tous types de véhicules. Un service premium, au plus proche de chez vous.
             </p>
-
-            <div className="pt-1">
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#25D366]/10 border border-[#25D366]/20 text-[#25D366] text-[11px] font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#25D366] animate-pulse" />
-                Artisan Detailing & Soin Prestige
-              </span>
-            </div>
           </div>
 
           {/* Col 2: Navigation Rapide */}
@@ -134,7 +127,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenBooking }) =>
           </div>
         </div>
 
-        {/* SECTION RÉSEAUX SOCIAUX - GRANDS BOUTONS ZOOM INTERACTIFS */}
+        {/* Section Réseaux Sociaux Professionnelle & Interactive (Strictement tout en bas du site) */}
         <div className="pt-10 pb-8 border-t border-white/10 flex flex-col items-center justify-center text-center">
           <div className="flex items-center space-x-3 mb-6">
             <div className="h-[1px] w-8 sm:w-16 bg-white/10" />
@@ -144,19 +137,19 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenBooking }) =>
             <div className="h-[1px] w-8 sm:w-16 bg-white/10" />
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 w-full max-w-lg px-2">
-            {/* Bouton Instagram */}
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 w-full max-w-md px-2">
+            {/* Bouton Moderne Instagram avec Hover Zoom */}
             <a
               href="https://www.instagram.com/clean.r.auto/"
               target="_blank"
               rel="noopener noreferrer"
-              className="group w-full sm:w-1/2 flex items-center justify-center space-x-3.5 px-5 py-3.5 rounded-xl bg-[#111317] border border-white/10 hover:border-[#E1306C]/60 text-white shadow-md hover:shadow-[0_12px_28px_-4px_rgba(225,48,108,0.35)] transition-all duration-300 ease-out hover:scale-[1.08] active:scale-95 cursor-pointer"
+              className="group flex-1 min-w-[170px] sm:min-w-[190px] flex items-center justify-center space-x-3.5 px-5 py-3 rounded-xl bg-[#111317] hover:bg-[#181a22] border border-white/10 hover:border-[#E1306C]/60 text-white shadow-md hover:shadow-[0_12px_28px_-4px_rgba(225,48,108,0.35)] transition-all duration-300 ease-out hover:scale-[1.08] active:scale-95 cursor-pointer"
             >
-              <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] flex items-center justify-center text-white shadow-sm shrink-0 group-hover:scale-110 transition-transform duration-300">
-                <InstagramIcon className="w-5 h-5" />
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] flex items-center justify-center text-white shadow-sm shrink-0 group-hover:shadow-[0_0_12px_rgba(225,48,108,0.6)] transition-shadow">
+                <InstagramIcon className="w-4.5 h-4.5" />
               </div>
               <div className="text-left">
-                <span className="block text-xs uppercase tracking-wider font-bold text-white">
+                <span className="block text-xs uppercase tracking-wider font-bold text-white group-hover:text-white transition-colors">
                   Instagram
                 </span>
                 <span className="block text-[11px] text-gray-400 group-hover:text-pink-300 transition-colors">
@@ -165,18 +158,18 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenBooking }) =>
               </div>
             </a>
 
-            {/* Bouton TikTok */}
+            {/* Bouton Moderne TikTok avec Hover Zoom */}
             <a
               href="https://www.tiktok.com/@cleanr.auto"
               target="_blank"
               rel="noopener noreferrer"
-              className="group w-full sm:w-1/2 flex items-center justify-center space-x-3.5 px-5 py-3.5 rounded-xl bg-[#111317] border border-white/10 hover:border-[#00f2fe]/60 text-white shadow-md hover:shadow-[0_12px_28px_-4px_rgba(0,242,254,0.35)] transition-all duration-300 ease-out hover:scale-[1.08] active:scale-95 cursor-pointer"
+              className="group flex-1 min-w-[170px] sm:min-w-[190px] flex items-center justify-center space-x-3.5 px-5 py-3 rounded-xl bg-[#111317] hover:bg-[#181a22] border border-white/10 hover:border-[#00f2fe]/60 text-white shadow-md hover:shadow-[0_12px_28px_-4px_rgba(0,242,254,0.35)] transition-all duration-300 ease-out hover:scale-[1.08] active:scale-95 cursor-pointer"
             >
-              <div className="w-9 h-9 rounded-lg bg-black border border-white/20 flex items-center justify-center text-white shadow-sm shrink-0 group-hover:border-[#00f2fe]/80 group-hover:scale-110 transition-all duration-300">
-                <TikTokIcon className="w-5 h-5" />
+              <div className="w-8 h-8 rounded-lg bg-black border border-white/20 flex items-center justify-center text-white shadow-sm shrink-0 group-hover:border-[#00f2fe]/80 group-hover:shadow-[0_0_12px_rgba(0,242,254,0.5)] transition-all">
+                <TikTokIcon className="w-4.5 h-4.5" />
               </div>
               <div className="text-left">
-                <span className="block text-xs uppercase tracking-wider font-bold text-white">
+                <span className="block text-xs uppercase tracking-wider font-bold text-white group-hover:text-white transition-colors">
                   TikTok
                 </span>
                 <span className="block text-[11px] text-gray-400 group-hover:text-cyan-300 transition-colors">
@@ -212,3 +205,4 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenBooking }) =>
     </footer>
   );
 };
+
