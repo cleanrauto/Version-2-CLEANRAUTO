@@ -1,0 +1,6 @@
+{
+  "name": "Clean'R Auto - Soin Automobile Haut de Gamme",
+  "description": "Lavage et soin automobile haut de gamme à domicile et sur lieu de travail à Orange (84100) et ses alentours.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
