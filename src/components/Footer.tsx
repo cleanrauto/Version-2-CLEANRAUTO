@@ -82,9 +82,9 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenBooking }) =>
             </h4>
             <ul className="space-y-1.5 text-xs text-gray-400 font-light">
               <li className="text-white font-medium">• Orange (84100) — Cœur de zone</li>
-              <li>• Piolenc, Courthézon, Sérignan</li>
-              <li>• Camaret, Châteauneuf-du-Pape, Jonquières</li>
-              <li>• Uchaux, Mornas, Bédarrides, Sorgues</li>
+              <li>• Piolenc, Courthézon, Camaret</li>
+              <li>• Châteauneuf-du-Pape, Uchaux, Mornas</li>
+              <li>• Bédarrides, Sorgues, Vedène</li>
               <li className="text-gray-200 font-medium pt-1">• Majorations d'accès :</li>
               <li>• Carpentras, Avignon, Bollène (84)</li>
               <li>• Montélimar & Pierrelatte (26)</li>

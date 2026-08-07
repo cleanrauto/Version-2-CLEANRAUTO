@@ -2,7 +2,13 @@ import { InterventionCity } from '../types';
 
 export const BASE_FREE_RADIUS_KM = 10;
 export const COST_PER_EXTRA_KM = 0.60;
+export const ORANGE_COORDS = { lat: 44.1381, lon: 4.8078 }; // Orange (84100)
 
+/**
+ * Calcul du montant des frais de déplacement :
+ * - Gratuit (0€) jusqu'à 10 km autour d'Orange
+ * - 0,60€ par kilomètre supplémentaire au-delà de 10 km
+ */
 export function calculateDisplacementFee(distanceKm: number): number {
   if (distanceKm <= BASE_FREE_RADIUS_KM) {
     return 0;
@@ -11,59 +17,75 @@ export function calculateDisplacementFee(distanceKm: number): number {
   return Math.round(extraKm * COST_PER_EXTRA_KM * 100) / 100;
 }
 
+/**
+ * Calcule la distance routière estimée (en km) depuis Orange (84100)
+ * basée sur les coordonnées GPS (formule de Haversine + coefficient de tracé routier de 1.25)
+ */
+export function calculateDistanceKmFromOrange(lat: number, lon: number): number {
+  const R = 6371; // Rayon de la Terre en km
+  const dLat = ((lat - ORANGE_COORDS.lat) * Math.PI) / 180;
+  const dLon = ((lon - ORANGE_COORDS.lon) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((ORANGE_COORDS.lat * Math.PI) / 180) *
+      Math.cos((lat * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const straightDistance = R * c;
+
+  if (straightDistance < 1) return 0;
+  // Facteur routier réaliste (tracé des routes françaises)
+  return Math.round(straightDistance * 1.22);
+}
+
+export function formatFeeNote(distanceKm: number, fee: number): string {
+  if (fee === 0) {
+    return `Zone Cœur (${distanceKm} km) — Déplacement offert (< 10 km)`;
+  }
+  const extraKm = Math.max(0, distanceKm - BASE_FREE_RADIUS_KM);
+  return `${distanceKm} km (${extraKm} km sup. × 0,60€/km)`;
+}
+
+// Communes phares pré-configurées (Vaucluse, Gard, Drôme, Bouches-du-Rhône)
 export const INTERVENTION_CITIES: InterventionCity[] = [
   // Frais 0€ — Rayon de 10 km (Frais de déplacement offerts)
   {
     name: 'Orange',
     zipCode: '84100',
-    fee: calculateDisplacementFee(0),
+    fee: 0,
     freeLimitNote: 'Zone Cœur — Frais offerts (< 10 km)',
     distanceKm: 0,
   },
   {
     name: 'Piolenc',
     zipCode: '84420',
-    fee: calculateDisplacementFee(6),
+    fee: 0,
     freeLimitNote: 'Zone Cœur — Frais offerts (< 10 km)',
     distanceKm: 6,
   },
   {
     name: 'Camaret-sur-Aigues',
     zipCode: '84850',
-    fee: calculateDisplacementFee(7),
+    fee: 0,
     freeLimitNote: 'Zone Cœur — Frais offerts (< 10 km)',
     distanceKm: 7,
   },
   {
     name: 'Courthézon',
     zipCode: '84350',
-    fee: calculateDisplacementFee(8),
-    freeLimitNote: 'Zone Cœur — Frais offerts (< 10 km)',
-    distanceKm: 8,
-  },
-  {
-    name: 'Sérignan-du-Comtat',
-    zipCode: '84830',
-    fee: calculateDisplacementFee(8),
+    fee: 0,
     freeLimitNote: 'Zone Cœur — Frais offerts (< 10 km)',
     distanceKm: 8,
   },
   {
     name: 'Châteauneuf-du-Pape',
     zipCode: '84230',
-    fee: calculateDisplacementFee(9),
+    fee: 0,
     freeLimitNote: 'Zone Cœur — Frais offerts (< 10 km)',
     distanceKm: 9,
   },
-  {
-    name: 'Jonquières',
-    zipCode: '84150',
-    fee: calculateDisplacementFee(10),
-    freeLimitNote: 'Zone Cœur — Frais offerts (< 10 km)',
-    distanceKm: 10,
-  },
-
-  // Frais par ordre de prix croissant (0,60€/km au-delà de 10 km)
+  // Communes environnantes (0,60€/km au-delà de 10 km)
   {
     name: 'Uchaux',
     zipCode: '84100',
@@ -191,3 +213,76 @@ export const INTERVENTION_CITIES: InterventionCity[] = [
     distanceKm: 48,
   },
 ];
+
+interface GeoApiCommune {
+  nom: string;
+  code: string;
+  codesPostaux?: string[];
+  codePostal?: string;
+  centre?: {
+    type: string;
+    coordinates: [number, number]; // [lon, lat]
+  };
+  departement?: {
+    code: string;
+    nom: string;
+  };
+  population?: number;
+}
+
+/**
+ * Recherche dynamique de n'importe quelle commune en France
+ * via l'API officielle française (geo.api.gouv.fr)
+ * avec calcul automatique instantané de la distance depuis Orange (84100) et des frais
+ */
+export async function searchFrenchCommunesOnline(query: string): Promise<InterventionCity[]> {
+  const trimmed = query.trim();
+  if (!trimmed || trimmed.length < 2) {
+    return [];
+  }
+
+  // Si c'est un code postal (chiffres)
+  const isZip = /^[0-9]+$/.test(trimmed);
+  const endpoint = isZip
+    ? `https://geo.api.gouv.fr/communes?codePostal=${encodeURIComponent(trimmed)}&fields=nom,code,codesPostaux,centre,departement&boost=population&limit=10`
+    : `https://geo.api.gouv.fr/communes?nom=${encodeURIComponent(trimmed)}&fields=nom,code,codesPostaux,centre,departement&boost=population&limit=10`;
+
+  try {
+    const res = await fetch(endpoint);
+    if (!res.ok) {
+      throw new Error(`API error: ${res.statusText}`);
+    }
+    const data: GeoApiCommune[] = await res.json();
+
+    return data.map((commune) => {
+      const zipCode = (commune.codesPostaux && commune.codesPostaux[0]) || commune.codePostal || '';
+      const dept = commune.departement ? ` (${commune.departement.code})` : '';
+      const fullName = `${commune.nom}${dept}`;
+
+      let distanceKm = 10;
+      if (commune.centre && commune.centre.coordinates) {
+        const [lon, lat] = commune.centre.coordinates;
+        distanceKm = calculateDistanceKmFromOrange(lat, lon);
+      }
+
+      const fee = calculateDisplacementFee(distanceKm);
+      const freeLimitNote = formatFeeNote(distanceKm, fee);
+
+      return {
+        name: fullName,
+        zipCode,
+        fee,
+        freeLimitNote,
+        distanceKm,
+      };
+    });
+  } catch (err) {
+    console.warn('Erreur lors de la recherche de commune en ligne:', err);
+    // Fallback : filtrer la liste locale
+    return INTERVENTION_CITIES.filter(
+      (c) =>
+        c.name.toLowerCase().includes(trimmed.toLowerCase()) ||
+        c.zipCode.includes(trimmed)
+    );
+  }
+}

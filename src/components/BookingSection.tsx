@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FORMULAS, VEHICLE_OPTIONS } from '../data/packages';
 import { ADDONS } from '../data/addons';
-import { INTERVENTION_CITIES } from '../data/cities';
-import { VehicleType, Category, BookingState } from '../types';
+import {
+  INTERVENTION_CITIES,
+  calculateDisplacementFee,
+  searchFrenchCommunesOnline,
+  calculateDistanceKmFromOrange,
+} from '../data/cities';
+import { VehicleType, Category, BookingState, InterventionCity } from '../types';
 import {
   Sparkles,
   Calendar,
@@ -19,6 +24,8 @@ import {
   ShieldCheck,
   Send,
   Loader2,
+  Search,
+  Check,
 } from 'lucide-react';
 
 interface BookingSectionProps {
@@ -51,6 +58,15 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
     comments: '',
   });
 
+  // Dynamic displacement calculation state
+  const [cityDistanceKm, setCityDistanceKm] = useState<number>(0);
+  const [calculatedDisplacementFee, setCalculatedDisplacementFee] = useState<number>(0);
+  const [citySearchInput, setCitySearchInput] = useState<string>(initialCityName);
+  const [citySuggestions, setCitySuggestions] = useState<InterventionCity[]>([]);
+  const [isSearchingCity, setIsSearchingCity] = useState<boolean>(false);
+  const [showCityDropdown, setShowCityDropdown] = useState<boolean>(false);
+  const cityDropdownRef = useRef<HTMLDivElement>(null);
+
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -80,11 +96,81 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
     }
   }, [initialAddonIds]);
 
+  // Recalculate displacement fee whenever city changes or initialCityName is set
+  const updateCityFee = (cityNameToSet: string) => {
+    const known = INTERVENTION_CITIES.find(
+      (c) => c.name.toLowerCase() === cityNameToSet.toLowerCase() || c.name.toLowerCase().startsWith(cityNameToSet.toLowerCase())
+    );
+    if (known) {
+      setCityDistanceKm(known.distanceKm);
+      setCalculatedDisplacementFee(known.fee);
+    } else {
+      // Default: perform online lookup or fallback
+      searchFrenchCommunesOnline(cityNameToSet).then((results) => {
+        if (results && results.length > 0) {
+          const match = results[0];
+          setCityDistanceKm(match.distanceKm);
+          setCalculatedDisplacementFee(match.fee);
+        }
+      });
+    }
+  };
+
   useEffect(() => {
     if (initialCityName) {
       setBookingState((prev) => ({ ...prev, cityName: initialCityName }));
+      setCitySearchInput(initialCityName);
+      updateCityFee(initialCityName);
     }
   }, [initialCityName]);
+
+  // Handle outside click to close city suggestions dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (cityDropdownRef.current && !cityDropdownRef.current.contains(event.target as Node)) {
+        setShowCityDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Debounced search for French communes
+  useEffect(() => {
+    if (!citySearchInput || citySearchInput.trim().length < 2) {
+      // Filter from local list
+      const localMatches = INTERVENTION_CITIES.filter((c) =>
+        c.name.toLowerCase().includes((citySearchInput || '').toLowerCase())
+      );
+      setCitySuggestions(localMatches.slice(0, 6));
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsSearchingCity(true);
+      try {
+        const results = await searchFrenchCommunesOnline(citySearchInput);
+        setCitySuggestions(results.slice(0, 8));
+      } catch (e) {
+        const local = INTERVENTION_CITIES.filter((c) =>
+          c.name.toLowerCase().includes(citySearchInput.toLowerCase())
+        );
+        setCitySuggestions(local);
+      } finally {
+        setIsSearchingCity(false);
+      }
+    }, 250);
+
+    return () => clearTimeout(timer);
+  }, [citySearchInput]);
+
+  const handleSelectCommune = (city: InterventionCity) => {
+    setBookingState((prev) => ({ ...prev, cityName: city.name }));
+    setCitySearchInput(city.name);
+    setCityDistanceKm(city.distanceKm);
+    setCalculatedDisplacementFee(city.fee);
+    setShowCityDropdown(false);
+  };
 
   // Current calculated prices
   const currentFormula = FORMULAS.find((f) => f.id === bookingState.formulaId) || FORMULAS[1];
@@ -94,9 +180,7 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
   const selectedAddons = ADDONS.filter((a) => bookingState.selectedAddonIds.includes(a.id));
   const addonsTotalPrice = selectedAddons.reduce((sum, a) => sum + a.price, 0);
 
-  const cityInfo = INTERVENTION_CITIES.find((c) => c.name === bookingState.cityName) || INTERVENTION_CITIES[0];
-  const displacementFee = cityInfo.fee;
-
+  const displacementFee = calculatedDisplacementFee;
   const numericFormulaPrice = typeof formulaPrice === 'number' ? formulaPrice : 0;
   const grandTotalNumeric = Number((numericFormulaPrice + addonsTotalPrice + displacementFee).toFixed(2));
   const grandTotalDisplay = isDevis
@@ -124,49 +208,118 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
     });
   };
 
+  // Helper to generate the beautifully structured email and message body
+  const generateStructuredBookingDetails = (isMarkdown: boolean = false) => {
+    const vehicleLabel = VEHICLE_OPTIONS.find((v) => v.id === bookingState.vehicleType)?.label || bookingState.vehicleType.toUpperCase();
+    const priceLabel = isDevis ? 'Sur Devis' : `${formulaPrice}€`;
+    const feeText =
+      displacementFee === 0
+        ? '0,00€ (Frais offerts < 10 km)'
+        : `${displacementFee.toFixed(2).replace('.', ',')}€ (${bookingState.cityName})`;
+
+    const b = (text: string) => (isMarkdown ? `**${text}**` : text);
+
+    const optionsList =
+      selectedAddons.length > 0
+        ? selectedAddons.map((a) => `• ${b(a.name)} : +${a.price}€`).join('\n')
+        : '• Aucune option complémentaire sélectionnée';
+
+    const optionsTotalText = addonsTotalPrice > 0 ? `${addonsTotalPrice}€` : '0€';
+    const addressText = bookingState.customAddress?.trim() || 'Non renseignée';
+
+    return `========================================
+📋 ${b("NOUVELLE DEMANDE DE RÉSERVATION CLEAN'R")}
+========================================
+
+👤 ${b('INFORMATIONS CLIENT')}
+• ${b('Nom & Prénom')} : ${bookingState.fullName.trim() || 'Non renseigné'}
+• ${b('Téléphone')} : ${bookingState.phone.trim() || 'Non renseigné'}
+• ${b('Email')} : ${bookingState.email.trim() || 'Non renseigné'}
+
+🚗 ${b('DÉTAILS DU VÉHICULE')}
+• ${b('Catégorie')} : ${vehicleLabel}
+• ${b('Modèle/Détails')} : ${bookingState.vehicleModelDetails?.trim() || 'Non spécifié'}
+
+🧽 ${b('PRESTATION & FORMULE')}
+• ${b('Formule choisie')} : ${currentFormula.name} (${priceLabel})
+
+➕ ${b('OPTIONS COMPLÉMENTAIRES SÉLECTIONNÉES')}
+${optionsList}
+
+📍 ${b("LIEU ET CRÉNEAU D'INTERVENTION")}
+• ${b('Commune')} : ${bookingState.cityName} (${cityDistanceKm} km depuis base Orange)
+• ${b('Type de lieu')} : ${bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile'}
+• ${b('Adresse')} : ${addressText}
+• ${b('Date souhaitée')} : ${bookingState.date || 'À convenir'}
+• ${b('Créneau horaire')} : ${bookingState.timeSlot}
+
+💰 ${b('DÉTAIL DU TARIF & ESTIMATION TOTAL')}
+• ${b('Prix de la formule')} : ${priceLabel}
+• ${b('Total des options')} : ${optionsTotalText}
+• ${b('Frais de déplacement')} : ${feeText}
+----------------------------------------
+• ${b('TOTAL ESTIMÉ TTC')} : ${b(grandTotalDisplay)}`;
+  };
+
   // Generate Prefilled WhatsApp URL
   const generateWhatsAppMessage = () => {
-    const vehicleLabel = VEHICLE_OPTIONS.find((v) => v.id === bookingState.vehicleType)?.label;
-    const addonsText =
-      selectedAddons.length > 0
-        ? selectedAddons.map((a) => a.name).join(', ')
-        : 'Aucune option';
-
+    const vehicleLabel = VEHICLE_OPTIONS.find((v) => v.id === bookingState.vehicleType)?.label || bookingState.vehicleType.toUpperCase();
     const priceLabel = isDevis ? 'Sur Devis' : `${formulaPrice}€`;
+    const feeText =
+      displacementFee === 0
+        ? '0,00€ (Frais offerts < 10 km)'
+        : `${displacementFee.toFixed(2).replace('.', ',')}€ (${bookingState.cityName})`;
 
-    const text = `Bonjour Clean'R Auto,%0A%0AJe souhaite réserver une prestation de soin automobile :%0A- *Véhicule* : ${vehicleLabel} (${bookingState.vehicleModelDetails || 'Modèle non spécifié'})%0A- *Formule* : ${currentFormula.name} (${priceLabel})%0A- *Options* : ${addonsText}%0A- *Lieu d'intervention* : ${bookingState.cityName} (${bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile'})%0A- *Nom* : ${bookingState.fullName || 'Client'}%0A- *Téléphone* : ${bookingState.phone || 'Non renseigné'}%0A- *Date souhaitée* : ${bookingState.date || 'À convenir'} (${bookingState.timeSlot})%0A%0A*Total estimé* : ${grandTotalDisplay}.%0A%0AMerci de me recontacter pour confirmer la disponibilité.`;
+    const optionsList =
+      selectedAddons.length > 0
+        ? selectedAddons.map((a) => `• *${a.name}* : +${a.price}€`).join('\n')
+        : '• Aucune option complémentaire';
 
-    return `https://wa.me/33617200516?text=${text}`;
+    const optionsTotalText = addonsTotalPrice > 0 ? `${addonsTotalPrice}€` : '0€';
+    const addressText = bookingState.customAddress?.trim() || 'Non renseignée';
+
+    const text = `========================================
+📋 *NOUVELLE DEMANDE DE RÉSERVATION CLEAN'R*
+========================================
+
+👤 *INFORMATIONS CLIENT*
+• *Nom & Prénom* : ${bookingState.fullName.trim() || 'Non renseigné'}
+• *Téléphone* : ${bookingState.phone.trim() || 'Non renseigné'}
+• *Email* : ${bookingState.email.trim() || 'Non renseigné'}
+
+🚗 *DÉTAILS DU VÉHICULE*
+• *Catégorie* : ${vehicleLabel}
+• *Modèle/Détails* : ${bookingState.vehicleModelDetails?.trim() || 'Non spécifié'}
+
+🧽 *PRESTATION & FORMULE*
+• *Formule choisie* : ${currentFormula.name} (${priceLabel})
+
+➕ *OPTIONS COMPLÉMENTAIRES SÉLECTIONNÉES*
+${optionsList}
+
+📍 *LIEU ET CRÉNEAU D'INTERVENTION*
+• *Commune* : ${bookingState.cityName} (${cityDistanceKm} km depuis base Orange)
+• *Type de lieu* : ${bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile'}
+• *Adresse* : ${addressText}
+• *Date souhaitée* : ${bookingState.date || 'À convenir'}
+• *Créneau horaire* : ${bookingState.timeSlot}
+
+💰 *DÉTAIL DU TARIF & ESTIMATION TOTAL*
+• *Prix de la formule* : ${priceLabel}
+• *Total des options* : ${optionsTotalText}
+• *Frais de déplacement* : ${feeText}
+----------------------------------------
+• *TOTAL ESTIMÉ TTC* : *${grandTotalDisplay}*
+
+Merci de me recontacter pour confirmer la disponibilité.`;
+
+    return `https://wa.me/33617200516?text=${encodeURIComponent(text)}`;
   };
 
   // Generate Email mailto URL
   const generateEmailMessage = () => {
-    const vehicleLabel = VEHICLE_OPTIONS.find((v) => v.id === bookingState.vehicleType)?.label;
-    const addonsText =
-      selectedAddons.length > 0
-        ? selectedAddons.map((a) => a.name).join(', ')
-        : 'Aucune option';
-
-    const priceLabel = isDevis ? 'Sur Devis' : `${formulaPrice}€`;
-    const subject = `Demande de devis / réservation Clean'R Auto - ${bookingState.fullName || 'Client'}`;
-    const body = `Bonjour Clean'R Auto,
-
-Je souhaite effectuer une demande de réservation / devis pour un soin automobile :
-
-• Client : ${bookingState.fullName || 'Non renseigné'}
-• Téléphone : ${bookingState.phone || 'Non renseigné'}
-• Email : ${bookingState.email || 'Non renseigné'}
-• Catégorie véhicule : ${vehicleLabel}
-• Précision modèle : ${bookingState.vehicleModelDetails || 'Non spécifié'}
-• Formule choisie : ${currentFormula.name} (${priceLabel})
-• Options sélectionnées : ${addonsText}
-• Lieu d'intervention : ${bookingState.cityName} (${bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile'})
-• Date & créneau souhaités : ${bookingState.date || 'À convenir'} (${bookingState.timeSlot})
-
-Total estimé : ${grandTotalDisplay}
-
-Merci de revenir vers moi pour valider le rendez-vous.`;
-
+    const subject = `[Réservation Clean'R Auto] - ${bookingState.fullName.trim() || 'Client'} (${bookingState.cityName} - ${grandTotalDisplay})`;
+    const body = generateStructuredBookingDetails(false);
     return `mailto:contact@cleanrauto.fr?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
@@ -175,28 +328,46 @@ Merci de revenir vers moi pour valider le rendez-vous.`;
     setIsSubmitting(true);
 
     const vehicleLabel = VEHICLE_OPTIONS.find((v) => v.id === bookingState.vehicleType)?.label || bookingState.vehicleType;
-    const addonsText =
-      selectedAddons.length > 0
-        ? selectedAddons.map((a) => a.name).join(', ')
-        : 'Aucune option';
-
     const priceLabel = isDevis ? 'Sur Devis' : `${formulaPrice}€`;
+    const feeText =
+      displacementFee === 0
+        ? '0,00€ (Frais offerts < 10 km)'
+        : `${displacementFee.toFixed(2).replace('.', ',')}€ (${bookingState.cityName})`;
+
+    const formattedMessage = generateStructuredBookingDetails(true);
 
     const payload = {
-      name: bookingState.fullName,
-      phone: bookingState.phone,
-      email: bookingState.email || 'Non renseigné',
-      vehicleCategory: vehicleLabel,
-      vehicleDetails: bookingState.vehicleModelDetails || 'Non spécifié',
-      formula: `${currentFormula.name} (${priceLabel})`,
-      options: addonsText,
-      city: bookingState.cityName,
-      locationType: bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile',
-      preferredDate: bookingState.date || 'À convenir',
-      timeSlot: bookingState.timeSlot,
-      totalEstimated: grandTotalDisplay,
-      _replyto: bookingState.email || 'contact@cleanrauto.fr',
-      _subject: `[Devis Clean'R Auto] - Nouvelle demande de ${bookingState.fullName || 'Client'}`,
+      _subject: `📋 [Nouvelle Réservation] ${bookingState.fullName.trim() || 'Client'} - ${bookingState.cityName} (${grandTotalDisplay})`,
+      _replyto: bookingState.email.trim() || undefined,
+      
+      // Full human readable detailed block matching user specification
+      message: formattedMessage,
+
+      // Individual structured fields for easy parsing & sorting in inbox
+      '1_Client_Nom_Prenom': bookingState.fullName.trim() || 'Non renseigné',
+      '2_Client_Telephone': bookingState.phone.trim() || 'Non renseigné',
+      '3_Client_Email': bookingState.email.trim() || 'Non renseigné',
+
+      '4_Vehicule_Categorie': vehicleLabel,
+      '5_Vehicule_Modele_Details': bookingState.vehicleModelDetails?.trim() || 'Non spécifié',
+
+      '6_Prestation_Formule': `${currentFormula.name} (${priceLabel})`,
+      '7_Options_Selectionnees':
+        selectedAddons.length > 0
+          ? selectedAddons.map((a) => `${a.name} (+${a.price}€)`).join(' | ')
+          : 'Aucune option',
+
+      '8_Lieu_Commune': `${bookingState.cityName} (${cityDistanceKm} km depuis base Orange)`,
+      '9_Lieu_Type': bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile',
+      '10_Lieu_Adresse': bookingState.customAddress?.trim() || 'Non renseignée',
+      
+      '11_Date_Souhaitee': bookingState.date || 'À convenir',
+      '12_Creneau_Horaire': bookingState.timeSlot,
+
+      '13_Tarif_Formule': priceLabel,
+      '14_Total_Options': addonsTotalPrice > 0 ? `${addonsTotalPrice}€` : '0€',
+      '15_Frais_Deplacement': feeText,
+      '16_TOTAL_ESTIME_TTC': grandTotalDisplay,
     };
 
     try {
@@ -212,17 +383,18 @@ Merci de revenir vers moi pour valider le rendez-vous.`;
       if (response.ok) {
         setSubmitted(true);
       } else {
-        // Fallback in case of endpoint response error
         setSubmitted(true);
       }
     } catch (err) {
       console.error('Erreur envoi Formspree:', err);
-      // Fallback submit so user isn't stuck
       setSubmitted(true);
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  // Popular quick city picks
+  const POPULAR_QUICK_CITIES: InterventionCity[] = INTERVENTION_CITIES.slice(0, 8);
 
   return (
     <section id="contact" className="py-24 bg-[#0b0c0e] relative overflow-hidden">
@@ -394,56 +566,190 @@ Merci de revenir vers moi pour valider le rendez-vous.`;
                   </div>
                 </div>
 
-                {/* 4. Location & Address */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-xs uppercase tracking-wider font-semibold text-[#25D366] block mb-1.5 flex items-center space-x-1">
-                      <MapPin className="w-3.5 h-3.5" />
-                      <span>Commune d'intervention</span>
-                    </label>
-                    <select
-                      value={bookingState.cityName}
-                      onChange={(e) => setBookingState((prev) => ({ ...prev, cityName: e.target.value }))}
-                      className="w-full bg-black/60 border border-white/15 focus:border-[#25D366] text-white text-xs rounded-xl p-3 focus:outline-none"
-                    >
-                      {INTERVENTION_CITIES.map((c) => (
-                        <option key={c.name} value={c.name}>
-                          {c.name} ({c.zipCode}) {c.fee === 0 ? '— Frais 0€' : `— +${c.fee}€`}
-                        </option>
-                      ))}
-                    </select>
+                {/* 4. Location & Address with Dynamic Commune Search & Distance Calculation */}
+                <div className="space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Commune Search & Autocomplete */}
+                    <div className="relative" ref={cityDropdownRef}>
+                      <label className="text-xs uppercase tracking-wider font-semibold text-[#25D366] block mb-1.5 flex items-center justify-between">
+                        <span className="flex items-center space-x-1.5">
+                          <MapPin className="w-3.5 h-3.5" />
+                          <span>Commune d'intervention <strong className="text-[#25D366]">*</strong></span>
+                        </span>
+                        {isSearchingCity && (
+                          <span className="text-[10px] text-gray-400 flex items-center space-x-1">
+                            <Loader2 className="w-3 h-3 animate-spin text-[#25D366]" />
+                            <span>Calcul distance...</span>
+                          </span>
+                        )}
+                      </label>
+
+                      <div className="relative">
+                        <input
+                          type="text"
+                          placeholder="Tapez votre ville ou code postal (ex: Orange, Sorgues, Avignon, 30150...)"
+                          value={citySearchInput}
+                          onFocus={() => setShowCityDropdown(true)}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setCitySearchInput(val);
+                            setBookingState((prev) => ({ ...prev, cityName: val }));
+                            setShowCityDropdown(true);
+                            updateCityFee(val);
+                          }}
+                          className="w-full bg-black/60 border border-white/15 focus:border-[#25D366] text-white text-xs rounded-xl p-3 pr-9 focus:outline-none transition-colors"
+                          required
+                        />
+                        <Search className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      </div>
+
+                      {/* Dropdown Suggestions */}
+                      {showCityDropdown && citySuggestions.length > 0 && (
+                        <div className="absolute left-0 right-0 top-full mt-1.5 bg-[#141720] border border-[#25D366]/40 rounded-xl shadow-2xl z-50 max-h-60 overflow-y-auto divide-y divide-white/5">
+                          <div className="p-2 text-[10px] uppercase font-bold text-gray-400 bg-black/40 flex justify-between">
+                            <span>Communes trouvées (France)</span>
+                            <span className="text-[#25D366]">Calcul auto depuis Orange</span>
+                          </div>
+                          {citySuggestions.map((city, idx) => {
+                            const isFree = city.fee === 0;
+                            return (
+                              <div
+                                key={`${city.name}-${city.zipCode}-${idx}`}
+                                onClick={() => handleSelectCommune(city)}
+                                className="p-2.5 hover:bg-[#25D366]/15 cursor-pointer flex items-center justify-between transition-colors group"
+                              >
+                                <div>
+                                  <div className="flex items-center space-x-1.5">
+                                    <MapPin className="w-3.5 h-3.5 text-[#25D366]" />
+                                    <span className="text-xs font-semibold text-white group-hover:text-[#25D366]">
+                                      {city.name}
+                                    </span>
+                                    {city.zipCode && (
+                                      <span className="text-[10px] text-gray-400 font-mono">
+                                        ({city.zipCode})
+                                      </span>
+                                    )}
+                                  </div>
+                                  <span className="text-[10px] text-gray-400 block pl-5">
+                                    {city.distanceKm} km depuis Orange • {city.freeLimitNote || (isFree ? 'Frais offerts (< 10 km)' : '0,60€/km au-delà de 10 km')}
+                                  </span>
+                                </div>
+
+                                <span
+                                  className={`text-[10px] font-bold px-2 py-0.5 rounded shrink-0 ${
+                                    isFree
+                                      ? 'bg-[#25D366]/15 text-[#25D366] border border-[#25D366]/30'
+                                      : 'bg-[#c5a059]/20 text-[#c5a059] border border-[#c5a059]/40'
+                                  }`}
+                                >
+                                  {isFree ? 'Frais 0€' : `+${city.fee.toFixed(2).replace('.', ',')}€`}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Location Type (Domicile vs Lieu de travail) */}
+                    <div>
+                      <label className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1.5">
+                        Type de lieu
+                      </label>
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setBookingState((prev) => ({ ...prev, isWorkplace: false }))}
+                          className={`flex-1 p-2.5 rounded-xl border text-xs flex items-center justify-center space-x-1.5 cursor-pointer ${
+                            !bookingState.isWorkplace
+                              ? 'bg-[#25D366]/20 border-[#25D366] text-white font-semibold'
+                              : 'bg-white/5 border-white/10 text-gray-400'
+                          }`}
+                        >
+                          <Home className="w-3.5 h-3.5" />
+                          <span>Domicile</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setBookingState((prev) => ({ ...prev, isWorkplace: true }))}
+                          className={`flex-1 p-2.5 rounded-xl border text-xs flex items-center justify-center space-x-1.5 cursor-pointer ${
+                            bookingState.isWorkplace
+                              ? 'bg-[#25D366]/20 border-[#25D366] text-white font-semibold'
+                              : 'bg-white/5 border-white/10 text-gray-400'
+                          }`}
+                        >
+                          <Building2 className="w-3.5 h-3.5" />
+                          <span>Lieu de travail</span>
+                        </button>
+                      </div>
+                    </div>
                   </div>
 
-                  <div>
-                    <label className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1.5">
-                      Type de lieu
-                    </label>
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setBookingState((prev) => ({ ...prev, isWorkplace: false }))}
-                        className={`flex-1 p-2.5 rounded-xl border text-xs flex items-center justify-center space-x-1.5 cursor-pointer ${
-                          !bookingState.isWorkplace
-                            ? 'bg-[#25D366]/20 border-[#25D366] text-white font-semibold'
-                            : 'bg-white/5 border-white/10 text-gray-400'
-                        }`}
-                      >
-                        <Home className="w-3.5 h-3.5" />
-                        <span>Domicile</span>
-                      </button>
+                  {/* Calculated Distance & Fee Feedback Banner */}
+                  <div className={`p-3 rounded-xl border text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 ${
+                    displacementFee === 0
+                      ? 'bg-[#25D366]/10 border-[#25D366]/30 text-white'
+                      : 'bg-[#c5a059]/10 border-[#c5a059]/30 text-white'
+                  }`}>
+                    <div className="flex items-center space-x-2">
+                      {displacementFee === 0 ? (
+                        <CheckCircle2 className="w-4 h-4 text-[#25D366] shrink-0" />
+                      ) : (
+                        <MapPin className="w-4 h-4 text-[#c5a059] shrink-0" />
+                      )}
+                      <div>
+                        <span className="font-semibold text-white">
+                          {bookingState.cityName || 'Orange'}
+                        </span>
+                        <span className="text-gray-300 ml-1.5">
+                          ({cityDistanceKm} km depuis base Orange)
+                        </span>
+                        <span className="block text-[11px] text-gray-400">
+                          {displacementFee === 0
+                            ? 'Frais de déplacement offerts (Rayon de 10 km)'
+                            : `Frais calculés automatiquement : 10 km offerts + ${Math.max(0, cityDistanceKm - 10)} km × 0,60€/km`}
+                        </span>
+                      </div>
+                    </div>
 
-                      <button
-                        type="button"
-                        onClick={() => setBookingState((prev) => ({ ...prev, isWorkplace: true }))}
-                        className={`flex-1 p-2.5 rounded-xl border text-xs flex items-center justify-center space-x-1.5 cursor-pointer ${
-                          bookingState.isWorkplace
-                            ? 'bg-[#25D366]/20 border-[#25D366] text-white font-semibold'
-                            : 'bg-white/5 border-white/10 text-gray-400'
-                        }`}
-                      >
-                        <Building2 className="w-3.5 h-3.5" />
-                        <span>Lieu de travail</span>
-                      </button>
+                    <div className="shrink-0 text-right">
+                      <span className={`text-xs font-bold px-2.5 py-1 rounded-lg ${
+                        displacementFee === 0
+                          ? 'bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/40'
+                          : 'bg-[#c5a059]/25 text-[#c5a059] border border-[#c5a059]/50'
+                      }`}>
+                        {displacementFee === 0 ? 'Frais déplacement : 0€' : `Frais déplacement : +${displacementFee.toFixed(2).replace('.', ',')}€`}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Quick Select Popular Towns */}
+                  <div>
+                    <span className="text-[10px] uppercase tracking-wider text-gray-400 font-medium block mb-1.5">
+                      Suggestions rapides communes proches :
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {POPULAR_QUICK_CITIES.map((c) => {
+                        const isSelected = bookingState.cityName.toLowerCase() === c.name.toLowerCase();
+                        return (
+                          <button
+                            key={c.name}
+                            type="button"
+                            onClick={() => handleSelectCommune(c)}
+                            className={`px-2.5 py-1 rounded-lg text-[11px] border transition-all cursor-pointer flex items-center space-x-1 ${
+                              isSelected
+                                ? 'bg-[#25D366]/25 border-[#25D366] text-white font-semibold'
+                                : 'bg-white/5 hover:bg-white/10 border-white/10 text-gray-300'
+                            }`}
+                          >
+                            <span>{c.name}</span>
+                            <span className={`text-[10px] font-bold ${c.fee === 0 ? 'text-[#25D366]' : 'text-[#c5a059]'}`}>
+                              ({c.fee === 0 ? '0€' : `+${c.fee}€`})
+                            </span>
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
@@ -495,8 +801,9 @@ Merci de revenir vers moi pour valider le rendez-vous.`;
                 {/* 6. Contact Details */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-white/10">
                   <div>
-                    <label className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1">
-                      Nom & Prénom *
+                    <label className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1.5 flex items-center space-x-1.5">
+                      <User className="w-3.5 h-3.5 text-[#25D366]" />
+                      <span>Nom & Prénom <strong className="text-[#25D366]">*</strong></span>
                     </label>
                     <input
                       type="text"
@@ -509,8 +816,9 @@ Merci de revenir vers moi pour valider le rendez-vous.`;
                   </div>
 
                   <div>
-                    <label className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1">
-                      Téléphone *
+                    <label className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1.5 flex items-center space-x-1.5">
+                      <Phone className="w-3.5 h-3.5 text-[#25D366]" />
+                      <span>Téléphone <strong className="text-[#25D366]">*</strong></span>
                     </label>
                     <input
                       type="tel"
@@ -523,8 +831,9 @@ Merci de revenir vers moi pour valider le rendez-vous.`;
                   </div>
 
                   <div>
-                    <label className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1">
-                      Adresse E-mail
+                    <label className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1.5 flex items-center space-x-1.5">
+                      <Mail className="w-3.5 h-3.5 text-[#25D366]" />
+                      <span>Adresse E-mail <strong className="text-[#25D366]">*</strong></span>
                     </label>
                     <input
                       type="email"
@@ -532,6 +841,7 @@ Merci de revenir vers moi pour valider le rendez-vous.`;
                       value={bookingState.email}
                       onChange={(e) => setBookingState((prev) => ({ ...prev, email: e.target.value }))}
                       className="w-full bg-black/60 border border-white/15 focus:border-[#25D366] text-white text-xs rounded-xl p-3 focus:outline-none"
+                      required
                     />
                   </div>
                 </div>
