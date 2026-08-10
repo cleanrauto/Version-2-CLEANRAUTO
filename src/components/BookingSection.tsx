@@ -214,7 +214,7 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
     const priceLabel = isDevis ? 'Sur Devis' : `${formulaPrice}€`;
     const feeText =
       displacementFee === 0
-        ? '0,00€ (Frais offerts < 10 km)'
+        ? '0,00€ (Orange et < 10 km)'
         : `${displacementFee.toFixed(2).replace('.', ',')}€ (${bookingState.cityName})`;
 
     const b = (text: string) => (isMarkdown ? `**${text}**` : text);
@@ -222,13 +222,13 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
     const optionsList =
       selectedAddons.length > 0
         ? selectedAddons.map((a) => `• ${b(a.name)} : +${a.price}€`).join('\n')
-        : '• Aucune option complémentaire sélectionnée';
+        : '• Aucune option complémentaire';
 
     const optionsTotalText = addonsTotalPrice > 0 ? `${addonsTotalPrice}€` : '0€';
     const addressText = bookingState.customAddress?.trim() || 'Non renseignée';
 
     return `========================================
-📋 ${b("NOUVELLE DEMANDE DE RÉSERVATION CLEAN'R")}
+📋 ${b(" NOUVELLE DEMANDE DE RÉSERVATION CLEAN'R AUTO ")}
 ========================================
 
 👤 ${b('INFORMATIONS CLIENT')}
@@ -247,7 +247,7 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
 ${optionsList}
 
 📍 ${b("LIEU ET CRÉNEAU D'INTERVENTION")}
-• ${b('Commune')} : ${bookingState.cityName} (${cityDistanceKm} km depuis base Orange)
+• ${b('Commune')} : ${bookingState.cityName}
 • ${b('Type de lieu')} : ${bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile'}
 • ${b('Adresse')} : ${addressText}
 • ${b('Date souhaitée')} : ${bookingState.date || 'À convenir'}
@@ -258,7 +258,8 @@ ${optionsList}
 • ${b('Total des options')} : ${optionsTotalText}
 • ${b('Frais de déplacement')} : ${feeText}
 ----------------------------------------
-• ${b('TOTAL ESTIMÉ TTC')} : ${b(grandTotalDisplay)}`;
+• ${b('TOTAL ESTIMÉ TTC')} : ${b(grandTotalDisplay)}
+========================================`;
   };
 
   // Generate Prefilled WhatsApp URL
@@ -267,7 +268,7 @@ ${optionsList}
     const priceLabel = isDevis ? 'Sur Devis' : `${formulaPrice}€`;
     const feeText =
       displacementFee === 0
-        ? '0,00€ (Frais offerts < 10 km)'
+        ? '0,00€ (Orange et < 10 km)'
         : `${displacementFee.toFixed(2).replace('.', ',')}€ (${bookingState.cityName})`;
 
     const optionsList =
@@ -279,7 +280,7 @@ ${optionsList}
     const addressText = bookingState.customAddress?.trim() || 'Non renseignée';
 
     const text = `========================================
-📋 *NOUVELLE DEMANDE DE RÉSERVATION CLEAN'R*
+📋 * NOUVELLE DEMANDE DE RÉSERVATION CLEAN'R AUTO *
 ========================================
 
 👤 *INFORMATIONS CLIENT*
@@ -298,7 +299,7 @@ ${optionsList}
 ${optionsList}
 
 📍 *LIEU ET CRÉNEAU D'INTERVENTION*
-• *Commune* : ${bookingState.cityName} (${cityDistanceKm} km depuis base Orange)
+• *Commune* : ${bookingState.cityName}
 • *Type de lieu* : ${bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile'}
 • *Adresse* : ${addressText}
 • *Date souhaitée* : ${bookingState.date || 'À convenir'}
@@ -310,8 +311,7 @@ ${optionsList}
 • *Frais de déplacement* : ${feeText}
 ----------------------------------------
 • *TOTAL ESTIMÉ TTC* : *${grandTotalDisplay}*
-
-Merci de me recontacter pour confirmer la disponibilité.`;
+========================================`;
 
     return `https://wa.me/33617200516?text=${encodeURIComponent(text)}`;
   };
@@ -320,54 +320,22 @@ Merci de me recontacter pour confirmer la disponibilité.`;
   const generateEmailMessage = () => {
     const subject = `[Réservation Clean'R Auto] - ${bookingState.fullName.trim() || 'Client'} (${bookingState.cityName} - ${grandTotalDisplay})`;
     const body = generateStructuredBookingDetails(false);
-    return `mailto:contact@cleanrauto.fr?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    return `mailto:cleanr.autopro@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
   const handleSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const vehicleLabel = VEHICLE_OPTIONS.find((v) => v.id === bookingState.vehicleType)?.label || bookingState.vehicleType;
-    const priceLabel = isDevis ? 'Sur Devis' : `${formulaPrice}€`;
-    const feeText =
-      displacementFee === 0
-        ? '0,00€ (Frais offerts < 10 km)'
-        : `${displacementFee.toFixed(2).replace('.', ',')}€ (${bookingState.cityName})`;
+    const formattedMessage = generateStructuredBookingDetails(false);
 
-    const formattedMessage = generateStructuredBookingDetails(true);
-
+    // Only send the exact formatted reservation text, without duplicated individual form fields
     const payload = {
-      _subject: `📋 [Nouvelle Réservation] ${bookingState.fullName.trim() || 'Client'} - ${bookingState.cityName} (${grandTotalDisplay})`,
+      _subject: `📋 [Réservation Clean'R] ${bookingState.fullName.trim() || 'Client'} - ${bookingState.cityName} (${grandTotalDisplay})`,
+      email: bookingState.email.trim() || undefined,
       _replyto: bookingState.email.trim() || undefined,
-      
-      // Full human readable detailed block matching user specification
-      message: formattedMessage,
-
-      // Individual structured fields for easy parsing & sorting in inbox
-      '1_Client_Nom_Prenom': bookingState.fullName.trim() || 'Non renseigné',
-      '2_Client_Telephone': bookingState.phone.trim() || 'Non renseigné',
-      '3_Client_Email': bookingState.email.trim() || 'Non renseigné',
-
-      '4_Vehicule_Categorie': vehicleLabel,
-      '5_Vehicule_Modele_Details': bookingState.vehicleModelDetails?.trim() || 'Non spécifié',
-
-      '6_Prestation_Formule': `${currentFormula.name} (${priceLabel})`,
-      '7_Options_Selectionnees':
-        selectedAddons.length > 0
-          ? selectedAddons.map((a) => `${a.name} (+${a.price}€)`).join(' | ')
-          : 'Aucune option',
-
-      '8_Lieu_Commune': `${bookingState.cityName} (${cityDistanceKm} km depuis base Orange)`,
-      '9_Lieu_Type': bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile',
-      '10_Lieu_Adresse': bookingState.customAddress?.trim() || 'Non renseignée',
-      
-      '11_Date_Souhaitee': bookingState.date || 'À convenir',
-      '12_Creneau_Horaire': bookingState.timeSlot,
-
-      '13_Tarif_Formule': priceLabel,
-      '14_Total_Options': addonsTotalPrice > 0 ? `${addonsTotalPrice}€` : '0€',
-      '15_Frais_Deplacement': feeText,
-      '16_TOTAL_ESTIME_TTC': grandTotalDisplay,
+      name: bookingState.fullName.trim() || undefined,
+      DEMANDE_DE_RESERVATION: formattedMessage,
     };
 
     try {

@@ -4,7 +4,7 @@ export const VEHICLE_OPTIONS: VehicleOption[] = [
   {
     id: 'citadine',
     label: 'CITADINE',
-    examples: 'Fiat 500, C1, Twingo, Clio, 208, Polo...',
+    examples: 'Fiat 500, C1, Twingo...',
   },
   {
     id: 'routiere',
