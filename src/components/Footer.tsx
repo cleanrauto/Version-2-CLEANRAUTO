@@ -25,7 +25,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenBooking }) =>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           {/* Col 1: Brand Info */}
           <div className="space-y-4">
-            <a href="#" className="flex flex-col group">
+            <a href="/" aria-label="Retour à l'accueil Clean'R Auto" className="flex flex-col group">
               <span className="font-cinzel text-xl font-bold tracking-[0.25em] text-white group-hover:text-[#25D366] transition-colors">
                 CLEAN<span className="text-[#25D366]">'R</span> AUTO
               </span>
@@ -42,6 +42,16 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenBooking }) =>
               Navigation
             </h4>
             <ul className="space-y-2 text-xs font-light">
+              <li>
+                <a href="/" className="hover:text-[#25D366] transition-colors">
+                  Accueil
+                </a>
+              </li>
+              <li>
+                <a href="/nettoyage-interieur-voiture-orange/" className="hover:text-[#25D366] transition-colors">
+                  Nettoyage intérieur à Orange
+                </a>
+              </li>
               <li>
                 <a href="#experience" className="hover:text-[#25D366] transition-colors">
                   L'expérience Clean'R Auto
@@ -205,4 +215,3 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenBooking }) =>
     </footer>
   );
 };
-

@@ -41,7 +41,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenBooking }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Brand Logo Textuel Soigné */}
-          <a href="#" className="flex items-center space-x-2 group shrink-0">
+          <a href="/" aria-label="Retour à l'accueil Clean'R Auto" className="flex items-center space-x-2 group shrink-0">
             <span className="font-cinzel text-xl sm:text-2xl font-bold tracking-[0.2em] text-white group-hover:text-[#25D366] transition-colors">
               CLEAN<span className="text-[#25D366]">'R</span> AUTO
             </span>
