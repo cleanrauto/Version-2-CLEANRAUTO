@@ -10,6 +10,7 @@ interface FormulasSectionProps {
 export const FormulasSection: React.FC<FormulasSectionProps> = ({ onSelectFormula }) => {
   const [activeCategory, setActiveCategory] = useState<Category>('interieur');
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleType>('citadine');
+  const isInteriorLandingPage = window.location.pathname.startsWith('/nettoyage-interieur-voiture-orange');
 
   const filteredFormulas = FORMULAS.filter((f) => f.category === activeCategory);
 
@@ -114,6 +115,18 @@ export const FormulasSection: React.FC<FormulasSectionProps> = ({ onSelectFormul
             </button>
           </div>
         </div>
+
+        {activeCategory === 'interieur' && !isInteriorLandingPage && (
+          <div className="-mt-6 mb-12 text-center">
+            <a
+              href="/nettoyage-interieur-voiture-orange/"
+              className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#25D366] hover:text-white underline underline-offset-4 transition-colors"
+            >
+              Découvrir en détail le nettoyage intérieur à domicile à Orange
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
+        )}
 
         {/* Formula Cards Grid */}
         <div
