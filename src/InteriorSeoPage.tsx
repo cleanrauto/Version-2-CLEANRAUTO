@@ -103,7 +103,7 @@ export const InteriorSeoPage: React.FC = () => {
           </div>
         </section>
 
-        <FormulasSection onSelectFormula={(id, category, vehicle) => scrollToBooking(id, category, vehicle)} />
+        <FormulasSection isInteriorLandingPage onSelectFormula={(id, category, vehicle) => scrollToBooking(id, category, vehicle)} />
         <AddonsSection selectedAddonIds={selectedAddonIds} onToggleAddon={toggleAddon} onOpenBookingWithOptions={() => scrollToBooking()} />
 
         <section className="py-24 bg-[#0b0c0e] border-y border-white/5">

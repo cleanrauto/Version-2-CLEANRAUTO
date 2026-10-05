@@ -53,32 +53,32 @@ export const Footer: React.FC<FooterProps> = ({ onOpenLegal, onOpenBooking }) =>
                 </a>
               </li>
               <li>
-                <a href="#experience" className="hover:text-[#25D366] transition-colors">
+                <a href="/#experience" className="hover:text-[#25D366] transition-colors">
                   L'expérience Clean'R Auto
                 </a>
               </li>
               <li>
-                <a href="#formules" className="hover:text-[#25D366] transition-colors">
+                <a href="/#formules" className="hover:text-[#25D366] transition-colors">
                   Nos Formules Intérieur & Extérieur
                 </a>
               </li>
               <li>
-                <a href="#options" className="hover:text-[#25D366] transition-colors">
+                <a href="/#options" className="hover:text-[#25D366] transition-colors">
                   Prestations Sur-Mesure & Céramique
                 </a>
               </li>
               <li>
-                <a href="#zone" className="hover:text-[#25D366] transition-colors">
+                <a href="/#zone" className="hover:text-[#25D366] transition-colors">
                   Zone d'intervention (Orange 84)
                 </a>
               </li>
               <li>
-                <a href="#avis" className="hover:text-[#25D366] transition-colors">
+                <a href="/#avis" className="hover:text-[#25D366] transition-colors">
                   Témoignages Clients
                 </a>
               </li>
               <li>
-                <a href="#faq" className="hover:text-[#25D366] transition-colors">
+                <a href="/#faq" className="hover:text-[#25D366] transition-colors">
                   Foire Aux Questions
                 </a>
               </li>
