@@ -73,8 +73,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
               <Award className="w-5 h-5" />
             </div>
             <div className="text-left">
-              <span className="block text-xs uppercase tracking-wider text-gray-300 font-medium">Exigence Haute Couture</span>
-              <span className="text-sm font-semibold text-white">Satisfaction Client 5.0 ★</span>
+              <span className="block text-xs uppercase tracking-wider text-gray-300 font-medium">Avis de nos clients</span>
+              <span className="text-sm font-semibold text-white">Découvrez leurs témoignages</span>
             </div>
           </div>
 

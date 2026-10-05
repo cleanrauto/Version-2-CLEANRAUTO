@@ -3,9 +3,10 @@ import { Phone, MessageSquare, Menu, X, Shield, Calendar, MapPin, Sparkles } fro
 
 interface HeaderProps {
   onOpenBooking: (formulaId?: string) => void;
+  currentPath?: string;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onOpenBooking }) => {
+export const Header: React.FC<HeaderProps> = ({ onOpenBooking, currentPath = "/" }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -53,6 +54,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenBooking }) => {
               <a
                 key={link.name}
                 href={link.href}
+                aria-current={link.href === currentPath ? "page" : undefined}
                 className="text-xs font-medium uppercase tracking-[0.15em] text-[#cbd5e1] hover:text-[#25D366] transition-colors py-1 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-[#25D366] hover:after:w-full after:transition-all after:duration-300"
               >
                 {link.name}
@@ -123,6 +125,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenBooking }) => {
               <a
                 key={link.name}
                 href={link.href}
+                aria-current={link.href === currentPath ? "page" : undefined}
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-sm font-medium uppercase tracking-[0.15em] text-gray-300 hover:text-[#25D366] py-1.5 px-2 rounded hover:bg-white/5"
               >

@@ -9,6 +9,7 @@ import { Footer } from './components/Footer';
 import { LegalModal } from './components/LegalModal';
 import { StickyMobileBar } from './components/StickyMobileBar';
 import { BeforeAfter } from './components/BeforeAfter';
+import { ReviewsSection } from './components/ReviewsSection';
 import { VehicleType, Category } from './types';
 import { Phone, Mail, MessageSquare, Instagram, Music2, ArrowUpRight } from 'lucide-react';
 
@@ -38,7 +39,7 @@ export default function App({ page = '/' }: { page?: string }) {
  };
  const info = PAGES[page as keyof typeof PAGES] || PAGES['/'];
  return <div className="min-h-screen bg-[#0b0c0e] text-[#e2e8f0]">
-  <Header onOpenBooking={() => reserve()} />
+  <Header currentPath={page} onOpenBooking={() => reserve()} />
   <main>
    {page === '/' ? <><Hero onOpenBooking={() => reserve()} /><section className="max-w-6xl mx-auto px-5 py-14 grid md:grid-cols-3 gap-5">
     {[['/formules/', 'Formules & tarifs', 'Nettoyage intérieur, extérieur ou complet : choisissez la formule adaptée à votre voiture.'], ['/realisations-avis/', 'Réalisations & avis', 'Découvrez le résultat d’une intervention avec notre comparateur avant / après.'], ['/contact/', 'Contact & réservation', 'Appelez-nous ou échangez directement sur WhatsApp pour préparer votre nettoyage.']].map(([href,title,text]) => <a key={href} href={href} className="glass-card rounded-xl p-6 hover:border-[#25D366] transition-colors"><h2 className="text-2xl text-white mb-3">{title}</h2><p className="text-sm text-gray-300 leading-relaxed">{text}</p><ArrowUpRight className="mt-5 w-5 h-5 text-[#25D366]" /></a>)}
@@ -46,7 +47,7 @@ export default function App({ page = '/' }: { page?: string }) {
    {page === '/formules/' && <FormulasSection onSelectFormula={reserve} />}
    {page === '/options/' && <AddonsSection selectedAddonIds={addons} onToggleAddon={id => setAddons(current => current.includes(id) ? current.filter(x => x !== id) : [...current, id])} onOpenBookingWithOptions={() => reserve()} />}
    {page === '/faq/' && <FaqSection />}
-   {page === '/realisations-avis/' && <><BeforeAfter /><section className="max-w-3xl mx-auto text-center px-5 py-14"><h2 className="text-3xl text-white mb-5">Les avis de nos clients</h2><a className="inline-flex items-center gap-2 border border-[#25D366]/40 rounded px-6 py-4 text-[#25D366]" href="https://www.google.com/maps/search/?api=1&query=Clean%27R%20Auto%20Orange%2006%2017%2020%2005%2016" target="_blank" rel="noopener noreferrer">Consulter nos avis sur Google <ArrowUpRight className="w-4 h-4" /></a></section></>}
+   {page === '/realisations-avis/' && <><BeforeAfter /><ReviewsSection /></>}
    {page === '/contact/' && <>
     <section className="max-w-4xl mx-auto px-5 pt-5 pb-8">
      <div className="grid sm:grid-cols-3 gap-4">

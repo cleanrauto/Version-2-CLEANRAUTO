@@ -1,50 +1,12 @@
 import { ReviewItem, FaqItem } from '../types';
 
+// Transcribed from the original client-provided Google review screenshots.
+// Giuseppe's screenshot ends at Google’s “Plus” link; only the visible text is reproduced.
 export const REVIEWS: ReviewItem[] = [
-  {
-    id: '1',
-    author: 'Alexandre M.',
-    location: 'Orange (84100)',
-    vehicle: 'Volkswagen Golf 8',
-    rating: 5,
-    date: 'Il y a 1 semaine',
-    title: 'Service très pratique sur mon lieu de travail',
-    comment: 'Clean\'R Auto est intervenu directement sur le parking de mon entreprise pendant mes réunions. Retrouver ma Golf 8 impeccable, habitacle propre et cuirs bien nourris sans perdre de temps. Très satisfait du service.',
-    formulaUsed: 'La Prestige Intérieur',
-  },
-  {
-    id: '2',
-    author: 'Mathieu V.',
-    location: 'Châteauneuf-du-Pape',
-    vehicle: 'Range Rover Autobiography',
-    rating: 5,
-    date: 'Il y a 3 semaines',
-    title: 'Qualité digne d\'un vrai professionnel',
-    comment: 'J\'ai testé la formule Prestige Intérieur pour mon Range Rover suite à des vacances en famille. Les cuirs sont ressortis mats et le véhicule est comme neuf, tout juste sorti de concession malgré ses quelques années. Travail très soigné.',
-    formulaUsed: 'La Prestige Intérieur',
-  },
-  {
-    id: '3',
-    author: 'Élodie & Laurent B.',
-    location: 'Montélimar',
-    vehicle: 'Porsche Taycan',
-    rating: 5,
-    date: 'Il y a 1 mois',
-    title: 'Très belle prestation sur notre Taycan',
-    comment: 'Le Pack Intégral Prestige réalisé sur notre Taycan à Montélimar est parfait. Habitacle comme neuf, cuirs bien entretenus et carrosserie très brillante. Ponctualité remarquable et matériel professionnel.',
-    formulaUsed: 'Pack Intégral Prestige',
-  },
-  {
-    id: '4',
-    author: 'Élodie K.',
-    location: 'Montfavet',
-    vehicle: 'MINI Cooper S',
-    rating: 5,
-    date: 'Il y a 1 mois',
-    title: 'Très satisfaite de la prestation',
-    comment: 'Nettoyage intérieur impeccable sur ma MINI Cooper S à Montfavet avec la formule Prestige Intérieur. Les moindres détails et les sièges sont ressortis très propres. Service à domicile très pratique et intervenant très professionnel.',
-    formulaUsed: 'La Prestige Intérieur',
-  },
+ { id: 'celia', author: 'Célia', rating: 5, date: 'Visité en septembre', location: '', vehicle: '', title: '', formulaUsed: '', comment: 'Super prestation ! Travail sérieux, soigné et professionnel. La voiture est ressortie vraiment impeccable, avec beaucoup d’attention portée aux détails. On voit que le travail est fait avec soin et passion. Ponctuel, sympathique et très sérieux, je recommande sans hésiter ses services pour un nettoyage de qualité' },
+ { id: 'giuseppe', author: 'Giuseppe R.', rating: 5, date: 'Visité en septembre', location: '', vehicle: '', title: '', formulaUsed: '', comment: 'J’ai confié mon véhicule pour un nettoyage intérieur complet et le résultat est bluffant. Les sièges ont retrouvé leur éclat d’origine. Si vous cherchez un vrai spécialiste du nettoyage auto à domicile près d’orange, foncez chez Clean R Auto !' },
+ { id: 'corentin', author: 'Corentin F.', rating: 5, date: '', location: '', vehicle: '', title: '', formulaUsed: '', comment: 'Je fais appel à ses services régulièrement depuis plusieurs semaines pour plusieurs véhicules et j’en suis toujours aussi content.\n\nIl est ponctuel, professionnel et le travail est toujours très bien réalisé. La qualité est constante et le résultat est impeccable à chaque passage.\n\nJe recommande vivement !' },
+ { id: 'lucie', author: 'Lucie M.', rating: 5, date: 'Visité en septembre', location: '', vehicle: '', title: '', formulaUsed: '', comment: 'Une prestation bien au dessus de mes attentes. Sans trop d’espoir pour ma voiture, j’ai eu le plaisir de retrouver une voiture sortie de concession. On ne se lasse jamais du résultat. Le tout avec une amabilité remarquable. Je recommande ! À bientôt pour de nouveaux lavages.' },
 ];
 
 export const FAQS: FaqItem[] = [

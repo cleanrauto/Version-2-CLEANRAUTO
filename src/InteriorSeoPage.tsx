@@ -44,7 +44,7 @@ export const InteriorSeoPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#0b0c0e] text-[#e2e8f0] selection:bg-[#25D366] selection:text-black">
-      <Header onOpenBooking={() => scrollToBooking()} />
+      <Header currentPath="/nettoyage-interieur-voiture-orange/" onOpenBooking={() => scrollToBooking()} />
 
       <main>
         <section className="relative min-h-screen pt-20 sm:pt-24 pb-12 flex flex-col justify-center overflow-hidden bg-[#0b0c0e]">
