@@ -37,7 +37,7 @@ export const InteriorSeoPage: React.FC = () => {
     const query = new URLSearchParams();
     if (formulaId) query.set('formule', formulaId);
     if (vehicleType) query.set('vehicule', vehicleType);
-    window.location.assign('/contact/' + (query.size ? '?' + query : ''));
+    window.location.assign('/reservation/' + (query.size ? '?' + query : ''));
   };
 
   const toggleAddon = (addonId: string) => setSelectedAddonIds((current) => current.includes(addonId) ? current.filter((id) => id !== addonId) : [...current, addonId]);

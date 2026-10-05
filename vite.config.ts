@@ -19,6 +19,7 @@ export default defineConfig(() => {
           'options': path.resolve(__dirname, 'options/index.html'),
           'realisations-avis': path.resolve(__dirname, 'realisations-avis/index.html'),
           'faq': path.resolve(__dirname, 'faq/index.html'),
+          'reservation': path.resolve(__dirname, 'reservation/index.html'),
           'contact': path.resolve(__dirname, 'contact/index.html'),
           nettoyageInterieurOrange: path.resolve(__dirname, 'nettoyage-interieur-voiture-orange/index.html'),
         },

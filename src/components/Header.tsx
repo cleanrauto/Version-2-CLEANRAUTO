@@ -28,6 +28,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenBooking, currentPath = "/"
     { name: 'Options', href: '/options/' },
     { name: 'Réalisations & Avis', href: '/realisations-avis/' },
     { name: 'FAQ', href: '/faq/' },
+    { name: 'Réservation', href: '/reservation/' },
     { name: 'Contact', href: '/contact/' },
   ];
 
@@ -49,7 +50,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenBooking, currentPath = "/"
           </a>
 
           {/* Desktop Navigation Équilibrée */}
-          <nav className="hidden xl:flex items-center space-x-4 xl:space-x-5">
+          <nav className="hidden 2xl:flex items-center space-x-4 xl:space-x-5">
             {navLinks.map((link) => (
               <a
                 key={link.name}
@@ -98,7 +99,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenBooking, currentPath = "/"
           </div>
 
           {/* Mobile Hamburger Toggle */}
-          <div className="flex items-center space-x-3 xl:hidden">
+          <div className="flex items-center space-x-3 2xl:hidden">
             <button
               onClick={() => onOpenBooking()}
               className="green-gradient-bg text-black text-[11px] uppercase font-bold tracking-wider px-3 py-1.5 rounded sm:hidden"
@@ -119,7 +120,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenBooking, currentPath = "/"
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="xl:hidden bg-[#0e1015] border-b border-[#25D366]/20 px-4 pt-4 pb-6 space-y-3 animate-fadeIn">
+        <div className="2xl:hidden bg-[#0e1015] border-b border-[#25D366]/20 px-4 pt-4 pb-6 space-y-3 animate-fadeIn">
           <nav className="flex flex-col space-y-3 border-b border-white/10 pb-4">
             {navLinks.map((link) => (
               <a
