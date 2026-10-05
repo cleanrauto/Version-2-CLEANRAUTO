@@ -8,7 +8,7 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
   return (
-    <section className="relative min-h-screen pt-20 sm:pt-24 pb-12 flex flex-col justify-center overflow-hidden bg-[#0b0c0e]">
+    <section className="relative min-h-[75vh] pt-20 sm:pt-24 pb-12 flex flex-col justify-center overflow-hidden bg-[#0b0c0e]">
       {/* Background Image with Gradient Overlay */}
       <div className="absolute inset-0 z-0">
         <img
@@ -49,7 +49,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
           </button>
 
           <a
-            href="#formules"
+            href="/formules/"
             className="w-full sm:w-auto text-xs sm:text-sm uppercase tracking-[0.18em] font-medium text-white px-8 py-4 rounded bg-white/5 hover:bg-white/10 border border-white/15 hover:border-[#25D366]/50 transition-all duration-300 text-center backdrop-blur-sm"
           >
             Découvrir nos Formules
@@ -93,10 +93,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
       {/* Scroll Down Indicator */}
       <div className="relative z-10 text-center mt-12">
         <a
-          href="#experience"
+          href="/realisations-avis/"
           className="inline-flex flex-col items-center text-xs uppercase tracking-[0.2em] text-gray-400 hover:text-[#25D366] transition-colors"
         >
-          <span className="mb-1 text-[10px]">Explorer l'expérience</span>
+          <span className="mb-1 text-[10px]">Voir nos réalisations</span>
           <ChevronDown className="w-4 h-4 animate-bounce text-[#25D366]" />
         </a>
       </div>

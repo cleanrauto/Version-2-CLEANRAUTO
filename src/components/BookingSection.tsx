@@ -43,7 +43,7 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
 }) => {
   const [bookingState, setBookingState] = useState<BookingState>({
     vehicleType: initialVehicleType,
-    category: 'interieur',
+    category: FORMULAS.find(formula => formula.id === initialFormulaId)?.category || 'interieur',
     formulaId: initialFormulaId,
     selectedAddonIds: initialAddonIds,
     cityName: initialCityName,

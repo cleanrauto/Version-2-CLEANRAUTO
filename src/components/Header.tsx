@@ -22,12 +22,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenBooking }) => {
   }, []);
 
   const navLinks = [
-    { name: 'Expérience', href: '#experience' },
-    { name: 'Nos Formules', href: '#formules' },
-    { name: 'Options Sur-Mesure', href: '#options' },
-    { name: 'Zone Orange (84)', href: '#zone' },
-    { name: 'Avis Clients', href: '#avis' },
-    { name: 'FAQ', href: '#faq' },
+    { name: 'Accueil', href: '/' },
+    { name: 'Formules', href: '/formules/' },
+    { name: 'Options', href: '/options/' },
+    { name: 'Réalisations & Avis', href: '/realisations-avis/' },
+    { name: 'FAQ', href: '/faq/' },
+    { name: 'Contact', href: '/contact/' },
   ];
 
   return (
@@ -48,7 +48,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenBooking }) => {
           </a>
 
           {/* Desktop Navigation Équilibrée */}
-          <nav className="hidden lg:flex items-center space-x-7 xl:space-x-8">
+          <nav className="hidden xl:flex items-center space-x-4 xl:space-x-5">
             {navLinks.map((link) => (
               <a
                 key={link.name}
@@ -96,7 +96,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenBooking }) => {
           </div>
 
           {/* Mobile Hamburger Toggle */}
-          <div className="flex items-center space-x-3 lg:hidden">
+          <div className="flex items-center space-x-3 xl:hidden">
             <button
               onClick={() => onOpenBooking()}
               className="green-gradient-bg text-black text-[11px] uppercase font-bold tracking-wider px-3 py-1.5 rounded sm:hidden"
@@ -117,7 +117,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenBooking }) => {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#0e1015] border-b border-[#25D366]/20 px-4 pt-4 pb-6 space-y-3 animate-fadeIn">
+        <div className="xl:hidden bg-[#0e1015] border-b border-[#25D366]/20 px-4 pt-4 pb-6 space-y-3 animate-fadeIn">
           <nav className="flex flex-col space-y-3 border-b border-white/10 pb-4">
             {navLinks.map((link) => (
               <a

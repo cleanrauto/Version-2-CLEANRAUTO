@@ -15,6 +15,11 @@ export default defineConfig(() => {
       rollupOptions: {
         input: {
           main: path.resolve(__dirname, 'index.html'),
+          'formules': path.resolve(__dirname, 'formules/index.html'),
+          'options': path.resolve(__dirname, 'options/index.html'),
+          'realisations-avis': path.resolve(__dirname, 'realisations-avis/index.html'),
+          'faq': path.resolve(__dirname, 'faq/index.html'),
+          'contact': path.resolve(__dirname, 'contact/index.html'),
           nettoyageInterieurOrange: path.resolve(__dirname, 'nettoyage-interieur-voiture-orange/index.html'),
         },
       },
