@@ -19,7 +19,7 @@ export const FAQS: FaqItem[] = [
     category: 'Logistique & Déplacement',
     question: 'Comment sont calculés les frais de déplacement ?',
     answer:
-      "Nous intervenons à Orange et aux alentours. Les 10 premiers kilomètres du trajet routier aller depuis le centre-ville d’Orange sont offerts. Au-delà, les frais sont de 0,60 € par kilomètre supplémentaire. Le calcul utilise l’adresse choisie lors de la réservation et le trajet routier le plus court, plutôt que le centre de votre commune.",
+      "Nous intervenons à Orange et aux alentours. Les 10 premiers kilomètres du trajet routier aller depuis le centre-ville d’Orange sont offerts. Au-delà, les frais sont de 0,65 € par kilomètre supplémentaire. Le calcul utilise l’adresse choisie lors de la réservation et le trajet routier le plus court, plutôt que le centre de votre commune.",
   },
   {
     category: 'Soin & Matériaux',

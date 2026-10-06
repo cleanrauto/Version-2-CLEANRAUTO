@@ -111,7 +111,7 @@ export function AddressPicker({ onChange }: { onChange: (travel: AddressTravel |
         </li>)}
       </ul>}
     </div>
-    <p className="text-[11px] text-gray-400">Sélectionnez votre adresse dans les suggestions. Départ : centre-ville d’Orange. 10 km offerts, puis 0,60 €/km supplémentaire sur le trajet routier aller le plus court.</p>
+    <p className="text-[11px] text-gray-400">Sélectionnez votre adresse dans les suggestions. Départ : centre-ville d’Orange. 10 km offerts, puis 0,65 €/km supplémentaire sur le trajet routier aller le plus court.</p>
     <div aria-live="polite" className="text-xs">
       {busy && <p className="text-gray-300 flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{selected ? 'Calcul du trajet routier…' : 'Recherche des adresses…'}</p>}
       {message && <p className="text-amber-300">{message}</p>}
