@@ -14,7 +14,7 @@ function Comparison({ exterior = false }: { exterior?: boolean }) {
         <div className="absolute inset-0 bg-gradient-to-br from-[#10291c] to-[#0b1510]" aria-hidden="true" />
       ) : (
         <img src={afterImage} alt="Intérieur d'une Porsche Cayenne après nettoyage par Clean'R Auto à Orange"
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none" loading="lazy" draggable={false} />
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none" style={{ transform: 'scale(1.35) translate(7%, -13%)', transformOrigin: 'center' }} loading="lazy" draggable={false} />
       )}
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none"
