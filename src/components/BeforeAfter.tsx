@@ -14,12 +14,14 @@ function Comparison({ exterior = false }: { exterior?: boolean }) {
     <div style={{ aspectRatio: exterior ? '1086 / 1433' : '946 / 1213' }} className="relative overflow-hidden rounded-2xl border border-[#25D366]/30 bg-black shadow-2xl shadow-black/40 select-none">
       <img src={exterior ? exteriorAfterImage : afterImage}
         alt={exterior ? "Porsche Cayenne après nettoyage extérieur, plaque masquée" : "Intérieur d'une Porsche Cayenne après nettoyage par Clean'R Auto à Orange"}
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none" loading="lazy" draggable={false} />
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        style={exterior ? { transform: 'translate(-0.814%, 1.117%) matrix(1.076823, -0.01145, 0.004927, 1.073153, 0, 0)', transformOrigin: 'center' } : undefined} loading="lazy" draggable={false} />
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none"
         style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }} aria-hidden="true">
         <img src={exterior ? exteriorBeforeImage : beforeImage} alt=""
-          className="absolute inset-0 w-full h-full object-cover" loading="lazy" draggable={false} />
+          className="absolute inset-0 w-full h-full object-cover"
+          style={exterior ? { transform: 'scale(1.08)', transformOrigin: 'center' } : undefined} loading="lazy" draggable={false} />
       </div>
 
       <span className="absolute left-4 top-4 z-20 bg-black/80 border border-white/20 px-4 py-2 rounded text-xs uppercase tracking-widest text-white">Avant</span>
