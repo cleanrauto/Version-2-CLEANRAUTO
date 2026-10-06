@@ -117,13 +117,23 @@ export const FormulasSection: React.FC<FormulasSectionProps> = ({ onSelectFormul
         </div>
 
         {activeCategory === 'interieur' && !isInteriorLandingPage && (
-          <div className="-mt-6 mb-12 text-center">
+          <div className="-mt-6 mb-12 max-w-4xl mx-auto">
             <a
               href="/nettoyage-interieur-voiture-orange/"
-              className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#25D366] hover:text-white underline underline-offset-4 transition-colors"
+              className="group flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-xl border border-[#25D366]/30 bg-[#25D366]/5 p-5 sm:px-6 hover:border-[#25D366] hover:bg-[#25D366]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-4 focus-visible:ring-offset-[#0b0c0e] transition-colors"
             >
-              Découvrir en détail le nettoyage intérieur à domicile à Orange
-              <ArrowRight className="w-4 h-4" />
+              <span>
+                <span className="block text-base sm:text-lg font-semibold text-white mb-1">
+                  Nettoyage intérieur à Orange
+                </span>
+                <span className="block text-xs sm:text-sm text-gray-300 leading-relaxed">
+                  Découvrez les soins adaptés à votre habitacle, à domicile ou sur votre lieu de travail.
+                </span>
+              </span>
+              <span className="inline-flex items-center gap-2 text-sm font-semibold text-[#25D366] shrink-0">
+                Découvrir la prestation
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </span>
             </a>
           </div>
         )}
