@@ -29,13 +29,13 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
         {/* Titre Raffiné avec Serif */}
         <h1 className="font-serif-luxury text-4xl sm:text-6xl md:text-7xl font-light text-white tracking-tight leading-[1.15] mb-6 max-w-4xl">
-          Lavage auto et <span className="green-gradient-text">nettoyage de voiture</span>
+          L’excellence du <span className="green-gradient-text">lavage auto</span>
           <span className="block mt-2 sm:mt-3">à Orange</span>
         </h1>
 
         {/* Sous-titre Épuré */}
         <p className="text-base sm:text-lg text-[#cbd5e1] font-light max-w-2xl leading-relaxed mb-10">
-          Clean'R Auto réalise le nettoyage intérieur et extérieur de votre voiture à Orange (84100) et aux alentours, directement à domicile ou sur votre lieu de travail. Découvrez nos formules de lavage et nos soins de detailing.
+          Un nettoyage intérieur et extérieur soigné, à domicile ou sur votre lieu de travail. Clean’R Auto intervient à Orange (84100) et aux alentours, avec des formules adaptées à votre véhicule.
         </p>
 
         {/* Boutons d'Action */}

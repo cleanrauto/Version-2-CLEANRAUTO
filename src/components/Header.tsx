@@ -24,11 +24,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenBooking, currentPath = "/"
 
   const navLinks = [
     { name: 'Accueil', href: '/' },
+    { name: 'Réservation', href: '/reservation/' },
     { name: 'Formules', href: '/formules/' },
     { name: 'Options', href: '/options/' },
     { name: 'Réalisations & Avis', href: '/realisations-avis/' },
     { name: 'FAQ', href: '/faq/' },
-    { name: 'Réservation', href: '/reservation/' },
     { name: 'Contact', href: '/contact/' },
   ];
 
