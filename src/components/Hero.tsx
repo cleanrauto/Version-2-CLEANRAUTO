@@ -35,7 +35,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
 
         {/* Sous-titre Épuré */}
         <p className="text-base sm:text-lg text-[#cbd5e1] font-light max-w-2xl leading-relaxed mb-10">
-          Clean’R Auto sublime et protège votre véhicule avec un soin intérieur et extérieur sur mesure. Un service de detailing mobile à domicile ou sur votre lieu de travail, à Orange (84100) et aux alentours.
+          Clean’R Auto sublime et protège votre véhicule. Un nettoyage intérieur et extérieur sur mesure, à domicile ou sur votre lieu de travail, dans les environs.
         </p>
 
         {/* Boutons d'Action */}
