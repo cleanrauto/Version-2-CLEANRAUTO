@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sparkles, ChevronDown, ShieldCheck, Clock, Award } from 'lucide-react';
-import heroImgPath from '../assets/images/hero_car_luxury_1786020041468.jpg';
+import heroImgPath from '../assets/images/hero_car_luxury_1786020041468.webp';
 
 interface HeroProps {
   onOpenBooking: () => void;
@@ -15,6 +15,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
           src={heroImgPath}
           alt="Soin et detailing automobile de prestige Clean'R Auto"
           className="w-full h-full object-cover object-center scale-105 filter brightness-90 contrast-105"
+          width={1376}
+          height={768}
+          fetchPriority="high"
+          loading="eager"
           referrerPolicy="no-referrer"
         />
         {/* Subtle Dark Overlays for Text Legibility */}
