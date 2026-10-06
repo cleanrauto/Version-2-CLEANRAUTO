@@ -36,6 +36,14 @@ export const ADDONS: AddonOption[] = [
     icon: 'ShieldCheck',
   },
   {
+    id: 'sand',
+    name: 'Sable',
+    tagline: 'Aspiration approfondie du sable incrusté',
+    price: 10,
+    description: 'Retrait du sable incrusté dans les tapis, moquettes et le coffre.',
+    icon: 'Wind',
+  },
+  {
     id: 'dog-hair',
     name: 'Traitement Poils de Chien / Animaux',
     tagline: 'Élimination brossée et aspirée spécifique des poils incrustés',
