@@ -4,13 +4,13 @@ import { Category, VehicleType, Formula } from '../types';
 import { CheckCircle2, Clock, Sparkles, Car, Shield, ArrowRight, HelpCircle } from 'lucide-react';
 
 interface FormulasSectionProps {
+  isInteriorLandingPage?: boolean;
   onSelectFormula: (formulaId: string, category: Category, vehicleType: VehicleType) => void;
 }
 
-export const FormulasSection: React.FC<FormulasSectionProps> = ({ onSelectFormula }) => {
+export const FormulasSection: React.FC<FormulasSectionProps> = ({ onSelectFormula, isInteriorLandingPage = false }) => {
   const [activeCategory, setActiveCategory] = useState<Category>('interieur');
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleType>('citadine');
-  const isInteriorLandingPage = window.location.pathname.startsWith('/nettoyage-interieur-voiture-orange');
 
   const filteredFormulas = FORMULAS.filter((f) => f.category === activeCategory);
 

@@ -1,13 +1,13 @@
 import { InterventionCity } from '../types';
 
 export const BASE_FREE_RADIUS_KM = 10;
-export const COST_PER_EXTRA_KM = 0.60;
+export const COST_PER_EXTRA_KM = 0.65;
 export const ORANGE_COORDS = { lat: 44.1381, lon: 4.8078 }; // Orange (84100)
 
 /**
  * Calcul du montant des frais de déplacement :
  * - Gratuit (0€) jusqu'à 10 km autour d'Orange
- * - 0,60€ par kilomètre supplémentaire au-delà de 10 km
+ * - 0,65€ par kilomètre supplémentaire au-delà de 10 km
  */
 export function calculateDisplacementFee(distanceKm: number): number {
   if (distanceKm <= BASE_FREE_RADIUS_KM) {
@@ -44,7 +44,7 @@ export function formatFeeNote(distanceKm: number, fee: number): string {
     return `Zone Cœur (${distanceKm} km) — Déplacement offert (< 10 km)`;
   }
   const extraKm = Math.max(0, distanceKm - BASE_FREE_RADIUS_KM);
-  return `${distanceKm} km (${extraKm} km sup. × 0,60€/km)`;
+  return `${distanceKm} km (${extraKm} km sup. × 0,65€/km)`;
 }
 
 // Communes phares pré-configurées (Vaucluse, Gard, Drôme, Bouches-du-Rhône)
@@ -85,131 +85,131 @@ export const INTERVENTION_CITIES: InterventionCity[] = [
     freeLimitNote: 'Zone Cœur — Frais offerts (< 10 km)',
     distanceKm: 9,
   },
-  // Communes environnantes (0,60€/km au-delà de 10 km)
+  // Communes environnantes (0,65€/km au-delà de 10 km)
   {
     name: 'Uchaux',
     zipCode: '84100',
     fee: calculateDisplacementFee(11),
-    freeLimitNote: 'Calculé à 0,60€/km au-delà de 10 km',
+    freeLimitNote: 'Calculé à 0,65€/km au-delà de 10 km',
     distanceKm: 11,
   },
   {
     name: 'Mornas',
     zipCode: '84550',
     fee: calculateDisplacementFee(12),
-    freeLimitNote: 'Calculé à 0,60€/km au-delà de 10 km',
+    freeLimitNote: 'Calculé à 0,65€/km au-delà de 10 km',
     distanceKm: 12,
   },
   {
     name: 'Bédarrides',
     zipCode: '84370',
     fee: calculateDisplacementFee(14),
-    freeLimitNote: 'Calculé à 0,60€/km au-delà de 10 km',
+    freeLimitNote: 'Calculé à 0,65€/km au-delà de 10 km',
     distanceKm: 14,
   },
   {
     name: 'Roquemaure (Gard)',
     zipCode: '30150',
     fee: calculateDisplacementFee(14),
-    freeLimitNote: 'Gard (30) — 0,60€/km au-delà de 10 km',
+    freeLimitNote: 'Gard (30) — 0,65€/km au-delà de 10 km',
     distanceKm: 14,
   },
   {
     name: 'Saint-Laurent-des-Arbres (Gard)',
     zipCode: '30126',
     fee: calculateDisplacementFee(16),
-    freeLimitNote: 'Gard (30) — 0,60€/km au-delà de 10 km',
+    freeLimitNote: 'Gard (30) — 0,65€/km au-delà de 10 km',
     distanceKm: 16,
   },
   {
     name: 'Sorgues',
     zipCode: '84700',
     fee: calculateDisplacementFee(18),
-    freeLimitNote: 'Calculé à 0,60€/km au-delà de 10 km',
+    freeLimitNote: 'Calculé à 0,65€/km au-delà de 10 km',
     distanceKm: 18,
   },
   {
     name: 'Suze-la-Rousse (Drôme)',
     zipCode: '26790',
     fee: calculateDisplacementFee(18),
-    freeLimitNote: 'Drôme (26) — 0,60€/km au-delà de 10 km',
+    freeLimitNote: 'Drôme (26) — 0,65€/km au-delà de 10 km',
     distanceKm: 18,
   },
   {
     name: 'Entraigues-sur-la-Sorgue',
     zipCode: '84320',
     fee: calculateDisplacementFee(20),
-    freeLimitNote: 'Calculé à 0,60€/km au-delà de 10 km',
+    freeLimitNote: 'Calculé à 0,65€/km au-delà de 10 km',
     distanceKm: 20,
   },
   {
     name: 'Vedène / Avignon Nord',
     zipCode: '84270',
     fee: calculateDisplacementFee(22),
-    freeLimitNote: 'Calculé à 0,60€/km au-delà de 10 km',
+    freeLimitNote: 'Calculé à 0,65€/km au-delà de 10 km',
     distanceKm: 22,
   },
   {
     name: 'Carpentras',
     zipCode: '84200',
     fee: calculateDisplacementFee(23),
-    freeLimitNote: 'Calculé à 0,60€/km au-delà de 10 km',
+    freeLimitNote: 'Calculé à 0,65€/km au-delà de 10 km',
     distanceKm: 23,
   },
   {
     name: 'Bollène',
     zipCode: '84500',
     fee: calculateDisplacementFee(24),
-    freeLimitNote: 'Calculé à 0,60€/km au-delà de 10 km',
+    freeLimitNote: 'Calculé à 0,65€/km au-delà de 10 km',
     distanceKm: 24,
   },
   {
     name: 'Bagnols-sur-Cèze (Gard)',
     zipCode: '30200',
     fee: calculateDisplacementFee(26),
-    freeLimitNote: 'Gard (30) — 0,60€/km au-delà de 10 km',
+    freeLimitNote: 'Gard (30) — 0,65€/km au-delà de 10 km',
     distanceKm: 26,
   },
   {
     name: 'Villeneuve-lès-Avignon (Gard)',
     zipCode: '30400',
     fee: calculateDisplacementFee(26),
-    freeLimitNote: 'Gard (30) — 0,60€/km au-delà de 10 km',
+    freeLimitNote: 'Gard (30) — 0,65€/km au-delà de 10 km',
     distanceKm: 26,
   },
   {
     name: 'Avignon',
     zipCode: '84000',
     fee: calculateDisplacementFee(27),
-    freeLimitNote: 'Calculé à 0,60€/km au-delà de 10 km',
+    freeLimitNote: 'Calculé à 0,65€/km au-delà de 10 km',
     distanceKm: 27,
   },
   {
     name: 'Pierrelatte (Drôme)',
     zipCode: '26700',
     fee: calculateDisplacementFee(30),
-    freeLimitNote: 'Drôme (26) — 0,60€/km au-delà de 10 km',
+    freeLimitNote: 'Drôme (26) — 0,65€/km au-delà de 10 km',
     distanceKm: 30,
   },
   {
     name: 'Châteaurenard (13)',
     zipCode: '13160',
     fee: calculateDisplacementFee(32),
-    freeLimitNote: 'Bouches-du-Rhône (13) — 0,60€/km au-delà de 10 km',
+    freeLimitNote: 'Bouches-du-Rhône (13) — 0,65€/km au-delà de 10 km',
     distanceKm: 32,
   },
   {
     name: 'Cavaillon',
     zipCode: '84300',
     fee: calculateDisplacementFee(40),
-    freeLimitNote: 'Calculé à 0,60€/km au-delà de 10 km',
+    freeLimitNote: 'Calculé à 0,65€/km au-delà de 10 km',
     distanceKm: 40,
   },
   {
     name: 'Montélimar (Drôme)',
     zipCode: '26200',
     fee: calculateDisplacementFee(48),
-    freeLimitNote: 'Drôme (26) — 0,60€/km au-delà de 10 km',
+    freeLimitNote: 'Drôme (26) — 0,65€/km au-delà de 10 km',
     distanceKm: 48,
   },
 ];

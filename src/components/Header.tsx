@@ -3,9 +3,10 @@ import { Phone, MessageSquare, Menu, X, Shield, Calendar, MapPin, Sparkles } fro
 
 interface HeaderProps {
   onOpenBooking: (formulaId?: string) => void;
+  currentPath?: string;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onOpenBooking }) => {
+export const Header: React.FC<HeaderProps> = ({ onOpenBooking, currentPath = "/" }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -22,12 +23,13 @@ export const Header: React.FC<HeaderProps> = ({ onOpenBooking }) => {
   }, []);
 
   const navLinks = [
-    { name: 'Expérience', href: '#experience' },
-    { name: 'Nos Formules', href: '#formules' },
-    { name: 'Options Sur-Mesure', href: '#options' },
-    { name: 'Zone Orange (84)', href: '#zone' },
-    { name: 'Avis Clients', href: '#avis' },
-    { name: 'FAQ', href: '#faq' },
+    { name: 'Accueil', href: '/' },
+    { name: 'Réservation', href: '/reservation/' },
+    { name: 'Formules', href: '/formules/' },
+    { name: 'Options', href: '/options/' },
+    { name: 'Réalisations & Avis', href: '/realisations-avis/' },
+    { name: 'FAQ', href: '/faq/' },
+    { name: 'Contact', href: '/contact/' },
   ];
 
   return (
@@ -48,11 +50,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenBooking }) => {
           </a>
 
           {/* Desktop Navigation Équilibrée */}
-          <nav className="hidden lg:flex items-center space-x-7 xl:space-x-8">
+          <nav className="hidden 2xl:flex items-center space-x-4 xl:space-x-5">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
+                aria-current={link.href === currentPath ? "page" : undefined}
                 className="text-xs font-medium uppercase tracking-[0.15em] text-[#cbd5e1] hover:text-[#25D366] transition-colors py-1 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-[#25D366] hover:after:w-full after:transition-all after:duration-300"
               >
                 {link.name}
@@ -96,7 +99,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenBooking }) => {
           </div>
 
           {/* Mobile Hamburger Toggle */}
-          <div className="flex items-center space-x-3 lg:hidden">
+          <div className="flex items-center space-x-3 2xl:hidden">
             <button
               onClick={() => onOpenBooking()}
               className="green-gradient-bg text-black text-[11px] uppercase font-bold tracking-wider px-3 py-1.5 rounded sm:hidden"
@@ -117,12 +120,13 @@ export const Header: React.FC<HeaderProps> = ({ onOpenBooking }) => {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#0e1015] border-b border-[#25D366]/20 px-4 pt-4 pb-6 space-y-3 animate-fadeIn">
+        <div className="2xl:hidden bg-[#0e1015] border-b border-[#25D366]/20 px-4 pt-4 pb-6 space-y-3 animate-fadeIn">
           <nav className="flex flex-col space-y-3 border-b border-white/10 pb-4">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
+                aria-current={link.href === currentPath ? "page" : undefined}
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-sm font-medium uppercase tracking-[0.15em] text-gray-300 hover:text-[#25D366] py-1.5 px-2 rounded hover:bg-white/5"
               >

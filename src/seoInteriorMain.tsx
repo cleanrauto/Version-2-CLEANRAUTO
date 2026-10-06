@@ -1,8 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { StrictMode } from 'react';
+import { createRoot, hydrateRoot } from 'react-dom/client';
 import './index.css';
 import { InteriorSeoPage } from './InteriorSeoPage';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode><InteriorSeoPage /></React.StrictMode>,
-);
+const container = document.getElementById('root')!;
+const app = <StrictMode><InteriorSeoPage /></StrictMode>;
+if (container.hasChildNodes()) {
+  hydrateRoot(container, app);
+} else {
+  createRoot(container).render(app);
+}

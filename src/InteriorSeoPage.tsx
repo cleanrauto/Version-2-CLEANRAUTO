@@ -34,14 +34,17 @@ export const InteriorSeoPage: React.FC = () => {
   const scrollToBooking = (formulaId?: string, _category?: Category, vehicleType?: VehicleType) => {
     if (formulaId) setSelectedFormulaId(formulaId);
     if (vehicleType) setSelectedVehicleType(vehicleType);
-    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+    const query = new URLSearchParams();
+    if (formulaId) query.set('formule', formulaId);
+    if (vehicleType) query.set('vehicule', vehicleType);
+    window.location.assign('/reservation/' + (query.size ? '?' + query : ''));
   };
 
   const toggleAddon = (addonId: string) => setSelectedAddonIds((current) => current.includes(addonId) ? current.filter((id) => id !== addonId) : [...current, addonId]);
 
   return (
     <div className="min-h-screen bg-[#0b0c0e] text-[#e2e8f0] selection:bg-[#25D366] selection:text-black">
-      <Header onOpenBooking={() => scrollToBooking()} />
+      <Header currentPath="/nettoyage-interieur-voiture-orange/" onOpenBooking={() => scrollToBooking()} />
 
       <main>
         <section className="relative min-h-screen pt-20 sm:pt-24 pb-12 flex flex-col justify-center overflow-hidden bg-[#0b0c0e]">
@@ -83,7 +86,7 @@ export const InteriorSeoPage: React.FC = () => {
           <div className="relative z-10 text-center mt-12"><a href="#experience" className="inline-flex flex-col items-center text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-[#25D366]"><span className="mb-1">Découvrir la prestation</span><ChevronDown className="w-4 h-4 animate-bounce text-[#25D366]" /></a></div>
         </section>
 
-        <PillarsExperience />
+
 
         <section className="py-24 bg-[#0e1015] border-y border-white/5">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -103,8 +106,7 @@ export const InteriorSeoPage: React.FC = () => {
           </div>
         </section>
 
-        <FormulasSection onSelectFormula={(id, category, vehicle) => scrollToBooking(id, category, vehicle)} />
-        <AddonsSection selectedAddonIds={selectedAddonIds} onToggleAddon={toggleAddon} onOpenBookingWithOptions={() => scrollToBooking()} />
+        <FormulasSection isInteriorLandingPage onSelectFormula={(id, category, vehicle) => scrollToBooking(id, category, vehicle)} />
 
         <section className="py-24 bg-[#0b0c0e] border-y border-white/5">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -163,10 +165,7 @@ export const InteriorSeoPage: React.FC = () => {
           </div>
         </section>
 
-        <InterventionZone onSelectCity={(city) => { setSelectedCityName(city); scrollToBooking(); }} />
-        <BookingSection initialFormulaId={selectedFormulaId} initialVehicleType={selectedVehicleType} initialAddonIds={selectedAddonIds} initialCityName={selectedCityName} />
-        <ReviewsSection />
-        <FaqSection />
+
       </main>
 
       <Footer onOpenLegal={() => setIsLegalModalOpen(true)} onOpenBooking={() => scrollToBooking()} />

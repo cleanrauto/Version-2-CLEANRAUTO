@@ -8,7 +8,7 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
   return (
-    <section className="relative min-h-screen pt-20 sm:pt-24 pb-12 flex flex-col justify-center overflow-hidden bg-[#0b0c0e]">
+    <section className="relative min-h-[75vh] pt-20 sm:pt-24 pb-12 flex flex-col justify-center overflow-hidden bg-[#0b0c0e]">
       {/* Background Image with Gradient Overlay */}
       <div className="absolute inset-0 z-0">
         <img
@@ -29,13 +29,13 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
         {/* Titre Raffiné avec Serif */}
         <h1 className="font-serif-luxury text-4xl sm:text-6xl md:text-7xl font-light text-white tracking-tight leading-[1.15] mb-6 max-w-4xl">
-          L'excellence du <span className="green-gradient-text">soin automobile</span>
+          L’excellence du <span className="green-gradient-text">lavage auto à Orange</span>
           <span className="block mt-2 sm:mt-3">Là où vous êtes</span>
         </h1>
 
         {/* Sous-titre Épuré */}
         <p className="text-base sm:text-lg text-[#cbd5e1] font-light max-w-2xl leading-relaxed mb-10">
-          Clean'R Auto sublime et protège votre véhicule d'exception. Service de detailing mobile haut de gamme et sur-mesure à Orange (84) et ses alentours.
+          Clean’R Auto sublime et protège votre véhicule. Un nettoyage intérieur et extérieur sur mesure, à domicile ou sur votre lieu de travail.
         </p>
 
         {/* Boutons d'Action */}
@@ -49,7 +49,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
           </button>
 
           <a
-            href="#formules"
+            href="/formules/"
             className="w-full sm:w-auto text-xs sm:text-sm uppercase tracking-[0.18em] font-medium text-white px-8 py-4 rounded bg-white/5 hover:bg-white/10 border border-white/15 hover:border-[#25D366]/50 transition-all duration-300 text-center backdrop-blur-sm"
           >
             Découvrir nos Formules
@@ -73,8 +73,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
               <Award className="w-5 h-5" />
             </div>
             <div className="text-left">
-              <span className="block text-xs uppercase tracking-wider text-gray-300 font-medium">Exigence Haute Couture</span>
-              <span className="text-sm font-semibold text-white">Satisfaction Client 5.0 ★</span>
+              <span className="block text-xs uppercase tracking-wider text-gray-300 font-medium">Avis de nos clients</span>
+              <span className="text-sm font-semibold text-white">Découvrez leurs témoignages</span>
             </div>
           </div>
 
@@ -93,10 +93,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
       {/* Scroll Down Indicator */}
       <div className="relative z-10 text-center mt-12">
         <a
-          href="#experience"
+          href="/realisations-avis/"
           className="inline-flex flex-col items-center text-xs uppercase tracking-[0.2em] text-gray-400 hover:text-[#25D366] transition-colors"
         >
-          <span className="mb-1 text-[10px]">Explorer l'expérience</span>
+          <span className="mb-1 text-[10px]">Voir nos réalisations</span>
           <ChevronDown className="w-4 h-4 animate-bounce text-[#25D366]" />
         </a>
       </div>

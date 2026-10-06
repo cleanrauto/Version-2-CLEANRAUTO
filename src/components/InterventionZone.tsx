@@ -80,7 +80,7 @@ export const InterventionZone: React.FC<InterventionZoneProps> = ({ onSelectCity
           </h2>
           <div className="w-16 h-[1px] bg-[#25D366]/50 mx-auto mb-6" />
           <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
-            Intervention à votre domicile ou sur votre lieu de travail. <strong className="text-white">Frais de déplacement offerts dans un rayon de 10 km</strong> autour d'Orange. Au-delà, le tarif de <strong className="text-[#c5a059] font-bold">0,60€ / km</strong> est calculé automatiquement pour n'importe quelle commune en France.
+            Intervention à votre domicile ou sur votre lieu de travail. <strong className="text-white">Frais de déplacement offerts dans un rayon de 10 km</strong> autour d'Orange. Au-delà, le tarif de <strong className="text-[#c5a059] font-bold">0,65€ / km</strong> est calculé automatiquement pour n'importe quelle commune en France.
           </p>
         </div>
 
@@ -141,7 +141,7 @@ export const InterventionZone: React.FC<InterventionZoneProps> = ({ onSelectCity
                           )}
                         </div>
                         <span className="text-[10px] text-gray-400 block mt-0.5">
-                          {city.distanceKm} km depuis Orange • {city.freeLimitNote || (isFree ? 'Zone Cœur (< 10 km)' : '0,60€/km au-delà')}
+                          {city.distanceKm} km depuis Orange • {city.freeLimitNote || (isFree ? 'Zone Cœur (< 10 km)' : '0,65€/km au-delà')}
                         </span>
                       </div>
 
