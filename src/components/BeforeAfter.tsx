@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { ChevronsLeftRight } from 'lucide-react';
 import beforeImage from '../assets/images/porsche-cayenne-avant.webp';
 import afterImage from '../assets/images/porsche-cayenne-apres.webp';
-import exteriorBeforeImage from '../assets/images/range-rover-avant.webp';
-import exteriorAfterImage from '../assets/images/range-rover-apres.webp';
+import exteriorBeforeImage from '../assets/images/porsche-exterieur-avant.webp';
+import exteriorAfterImage from '../assets/images/porsche-exterieur-apres.webp';
 
 function Comparison({ exterior = false }: { exterior?: boolean }) {
   const [position, setPosition] = useState(50);
@@ -11,9 +11,9 @@ function Comparison({ exterior = false }: { exterior?: boolean }) {
 
   return <figure className="min-w-0">
     <h3 className="font-serif-luxury text-2xl sm:text-3xl text-white text-center mb-5">{title}</h3>
-    <div style={{ aspectRatio: exterior ? '3 / 4' : '946 / 1213' }} className="relative overflow-hidden rounded-2xl border border-[#25D366]/30 bg-black shadow-2xl shadow-black/40 select-none">
+    <div style={{ aspectRatio: exterior ? '1086 / 1433' : '946 / 1213' }} className="relative overflow-hidden rounded-2xl border border-[#25D366]/30 bg-black shadow-2xl shadow-black/40 select-none">
       <img src={exterior ? exteriorAfterImage : afterImage}
-        alt={exterior ? "Range Rover propre, plaque masquée" : "Intérieur d'une Porsche Cayenne après nettoyage par Clean'R Auto à Orange"}
+        alt={exterior ? "Porsche Cayenne après nettoyage extérieur, plaque masquée" : "Intérieur d'une Porsche Cayenne après nettoyage par Clean'R Auto à Orange"}
         className="absolute inset-0 w-full h-full object-cover pointer-events-none" loading="lazy" draggable={false} />
 
       <div className="absolute inset-0 overflow-hidden pointer-events-none"
@@ -37,10 +37,10 @@ function Comparison({ exterior = false }: { exterior?: boolean }) {
       <input type="range" min="0" max="100" value={position}
         onChange={event => setPosition(Number(event.target.value))}
         className="absolute inset-0 z-30 w-full h-full opacity-0 cursor-ew-resize focus-visible:opacity-100 focus-visible:h-8 focus-visible:top-auto focus-visible:bottom-2"
-        aria-label={exterior ? 'Déplacer le curseur pour comparer les deux vues extérieures du Range Rover' : "Déplacer le curseur pour comparer l'intérieur de la Porsche avant et après le nettoyage"} />
+        aria-label={exterior ? 'Déplacer le curseur pour comparer les deux vues extérieures de la Porsche Cayenne' : "Déplacer le curseur pour comparer l'intérieur de la Porsche avant et après le nettoyage"} />
     </div>
     <figcaption className="mt-4 text-center text-xs sm:text-sm text-gray-400">
-      {exterior ? 'Faites glisser le curseur. Simulation visuelle : état avant reconstitué, plaques masquées.' : 'Faites glisser le curseur pour comparer les deux vues. Illustration : visuel avant retouché.'}
+      {exterior ? 'Faites glisser le curseur. Illustration : visuel après retouché, plaques masquées.' : 'Faites glisser le curseur pour comparer les deux vues. Illustration : visuel avant retouché.'}
     </figcaption>
   </figure>;
 }
