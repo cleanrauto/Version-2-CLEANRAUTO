@@ -1,13 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FORMULAS, VEHICLE_OPTIONS } from '../data/packages';
 import { ADDONS } from '../data/addons';
-import {
-  INTERVENTION_CITIES,
-  calculateDisplacementFee,
-  searchFrenchCommunesOnline,
-  calculateDistanceKmFromOrange,
-} from '../data/cities';
-import { VehicleType, Category, BookingState, InterventionCity } from '../types';
+import { AddressPicker, AddressTravel } from './AddressPicker';
+import { VehicleType, Category, BookingState } from '../types';
 import {
   Sparkles,
   Calendar,
@@ -46,7 +41,7 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
     category: FORMULAS.find(formula => formula.id === initialFormulaId)?.category || 'interieur',
     formulaId: initialFormulaId,
     selectedAddonIds: initialAddonIds,
-    cityName: initialCityName,
+    cityName: '',
     customAddress: '',
     isWorkplace: false,
     date: '',
@@ -58,15 +53,7 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
     comments: '',
   });
 
-  // Dynamic displacement calculation state
-  const [cityDistanceKm, setCityDistanceKm] = useState<number>(0);
-  const [calculatedDisplacementFee, setCalculatedDisplacementFee] = useState<number>(0);
-  const [citySearchInput, setCitySearchInput] = useState<string>(initialCityName);
-  const [citySuggestions, setCitySuggestions] = useState<InterventionCity[]>([]);
-  const [isSearchingCity, setIsSearchingCity] = useState<boolean>(false);
-  const [showCityDropdown, setShowCityDropdown] = useState<boolean>(false);
-  const cityDropdownRef = useRef<HTMLDivElement>(null);
-
+  const [addressTravel, setAddressTravel] = useState<AddressTravel | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -96,80 +83,13 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
     }
   }, [initialAddonIds]);
 
-  // Recalculate displacement fee whenever city changes or initialCityName is set
-  const updateCityFee = (cityNameToSet: string) => {
-    const known = INTERVENTION_CITIES.find(
-      (c) => c.name.toLowerCase() === cityNameToSet.toLowerCase() || c.name.toLowerCase().startsWith(cityNameToSet.toLowerCase())
-    );
-    if (known) {
-      setCityDistanceKm(known.distanceKm);
-      setCalculatedDisplacementFee(known.fee);
-    } else {
-      // Default: perform online lookup or fallback
-      searchFrenchCommunesOnline(cityNameToSet).then((results) => {
-        if (results && results.length > 0) {
-          const match = results[0];
-          setCityDistanceKm(match.distanceKm);
-          setCalculatedDisplacementFee(match.fee);
-        }
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (initialCityName) {
-      setBookingState((prev) => ({ ...prev, cityName: initialCityName }));
-      setCitySearchInput(initialCityName);
-      updateCityFee(initialCityName);
-    }
-  }, [initialCityName]);
-
-  // Handle outside click to close city suggestions dropdown
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (cityDropdownRef.current && !cityDropdownRef.current.contains(event.target as Node)) {
-        setShowCityDropdown(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // Debounced search for French communes
-  useEffect(() => {
-    if (!citySearchInput || citySearchInput.trim().length < 2) {
-      // Filter from local list
-      const localMatches = INTERVENTION_CITIES.filter((c) =>
-        c.name.toLowerCase().includes((citySearchInput || '').toLowerCase())
-      );
-      setCitySuggestions(localMatches.slice(0, 6));
-      return;
-    }
-
-    const timer = setTimeout(async () => {
-      setIsSearchingCity(true);
-      try {
-        const results = await searchFrenchCommunesOnline(citySearchInput);
-        setCitySuggestions(results.slice(0, 8));
-      } catch (e) {
-        const local = INTERVENTION_CITIES.filter((c) =>
-          c.name.toLowerCase().includes(citySearchInput.toLowerCase())
-        );
-        setCitySuggestions(local);
-      } finally {
-        setIsSearchingCity(false);
-      }
-    }, 250);
-
-    return () => clearTimeout(timer);
-  }, [citySearchInput]);
-
-  const handleSelectCommune = (city: InterventionCity) => {
-    setBookingState((prev) => ({ ...prev, cityName: city.name }));
-    setCitySearchInput(city.name);
-    setCityDistanceKm(city.distanceKm);
-    setCalculatedDisplacementFee(city.fee);
-    setShowCityDropdown(false);
+  const handleAddressChange = (travel: AddressTravel | null) => {
+    setAddressTravel(travel);
+    setBookingState(prev => ({
+      ...prev,
+      cityName: travel?.address.city || '',
+      customAddress: travel?.address.label || '',
+    }));
   };
 
   // Current calculated prices
@@ -180,12 +100,12 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
   const selectedAddons = ADDONS.filter((a) => bookingState.selectedAddonIds.includes(a.id));
   const addonsTotalPrice = selectedAddons.reduce((sum, a) => sum + a.price, 0);
 
-  const displacementFee = calculatedDisplacementFee;
+  const displacementFee = addressTravel?.fee || 0;
   const numericFormulaPrice = typeof formulaPrice === 'number' ? formulaPrice : 0;
   const grandTotalNumeric = Number((numericFormulaPrice + addonsTotalPrice + displacementFee).toFixed(2));
   const grandTotalDisplay = isDevis
     ? 'Sur Devis'
-    : `${grandTotalNumeric.toString().replace('.', ',')}€`;
+    : !addressTravel ? 'Adresse à préciser' : `${grandTotalNumeric.toString().replace('.', ',')}€`;
 
   const handleVehicleChange = (v: VehicleType) => {
     setBookingState((prev) => ({ ...prev, vehicleType: v }));
@@ -250,6 +170,7 @@ ${optionsList}
 • ${b('Commune')} : ${bookingState.cityName}
 • ${b('Type de lieu')} : ${bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile'}
 • ${b('Adresse')} : ${addressText}
+• ${b('Trajet aller depuis le centre-ville d’Orange')} : ${addressTravel?.distanceKm.toFixed(2).replace('.', ',')} km
 • ${b('Date souhaitée')} : ${bookingState.date || 'À convenir'}
 • ${b('Créneau horaire')} : ${bookingState.timeSlot}
 
@@ -302,6 +223,7 @@ ${optionsList}
 • *Commune* : ${bookingState.cityName}
 • *Type de lieu* : ${bookingState.isWorkplace ? 'Lieu de travail' : 'Domicile'}
 • *Adresse* : ${addressText}
+• *Trajet aller depuis le centre-ville d’Orange* : ${addressTravel?.distanceKm.toFixed(2).replace('.', ',')} km
 • *Date souhaitée* : ${bookingState.date || 'À convenir'}
 • *Créneau horaire* : ${bookingState.timeSlot}
 
@@ -325,6 +247,7 @@ ${optionsList}
 
   const handleSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!addressTravel) return;
     setIsSubmitting(true);
 
     const formattedMessage = generateStructuredBookingDetails(false);
@@ -360,9 +283,6 @@ ${optionsList}
       setIsSubmitting(false);
     }
   };
-
-  // Popular quick city picks
-  const POPULAR_QUICK_CITIES: InterventionCity[] = INTERVENTION_CITIES.slice(0, 8);
 
   return (
     <section id="contact" className="py-24 bg-[#0b0c0e] relative overflow-hidden">
@@ -417,7 +337,9 @@ ${optionsList}
               </a>
 
               <a
-                href={generateWhatsAppMessage()}
+                href={addressTravel ? generateWhatsAppMessage() : undefined}
+                    aria-disabled={!addressTravel}
+                    onClick={event => { if (!addressTravel) event.preventDefault(); }}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="green-gradient-bg text-black px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 hover:brightness-110 transition-all"
@@ -534,91 +456,9 @@ ${optionsList}
                   </div>
                 </div>
 
-                {/* 4. Location & Address with Dynamic Commune Search & Distance Calculation */}
-                <div className="space-y-3">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* Commune Search & Autocomplete */}
-                    <div className="relative" ref={cityDropdownRef}>
-                      <label className="text-xs uppercase tracking-wider font-semibold text-[#25D366] block mb-1.5 flex items-center justify-between">
-                        <span className="flex items-center space-x-1.5">
-                          <MapPin className="w-3.5 h-3.5" />
-                          <span>Commune d'intervention <strong className="text-[#25D366]">*</strong></span>
-                        </span>
-                        {isSearchingCity && (
-                          <span className="text-[10px] text-gray-400 flex items-center space-x-1">
-                            <Loader2 className="w-3 h-3 animate-spin text-[#25D366]" />
-                            <span>Calcul distance...</span>
-                          </span>
-                        )}
-                      </label>
-
-                      <div className="relative">
-                        <input
-                          type="text"
-                          placeholder="Tapez votre ville ou code postal (ex: Orange, Sorgues, Avignon, 30150...)"
-                          value={citySearchInput}
-                          onFocus={() => setShowCityDropdown(true)}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            setCitySearchInput(val);
-                            setBookingState((prev) => ({ ...prev, cityName: val }));
-                            setShowCityDropdown(true);
-                            updateCityFee(val);
-                          }}
-                          className="w-full bg-black/60 border border-white/15 focus:border-[#25D366] text-white text-xs rounded-xl p-3 pr-9 focus:outline-none transition-colors"
-                          required
-                        />
-                        <Search className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                      </div>
-
-                      {/* Dropdown Suggestions */}
-                      {showCityDropdown && citySuggestions.length > 0 && (
-                        <div className="absolute left-0 right-0 top-full mt-1.5 bg-[#141720] border border-[#25D366]/40 rounded-xl shadow-2xl z-50 max-h-60 overflow-y-auto divide-y divide-white/5">
-                          <div className="p-2 text-[10px] uppercase font-bold text-gray-400 bg-black/40 flex justify-between">
-                            <span>Communes trouvées (France)</span>
-                            <span className="text-[#25D366]">Calcul auto depuis Orange</span>
-                          </div>
-                          {citySuggestions.map((city, idx) => {
-                            const isFree = city.fee === 0;
-                            return (
-                              <div
-                                key={`${city.name}-${city.zipCode}-${idx}`}
-                                onClick={() => handleSelectCommune(city)}
-                                className="p-2.5 hover:bg-[#25D366]/15 cursor-pointer flex items-center justify-between transition-colors group"
-                              >
-                                <div>
-                                  <div className="flex items-center space-x-1.5">
-                                    <MapPin className="w-3.5 h-3.5 text-[#25D366]" />
-                                    <span className="text-xs font-semibold text-white group-hover:text-[#25D366]">
-                                      {city.name}
-                                    </span>
-                                    {city.zipCode && (
-                                      <span className="text-[10px] text-gray-400 font-mono">
-                                        ({city.zipCode})
-                                      </span>
-                                    )}
-                                  </div>
-                                  <span className="text-[10px] text-gray-400 block pl-5">
-                                    {city.distanceKm} km depuis Orange • {city.freeLimitNote || (isFree ? 'Frais offerts (< 10 km)' : '0,60€/km au-delà de 10 km')}
-                                  </span>
-                                </div>
-
-                                <span
-                                  className={`text-[10px] font-bold px-2 py-0.5 rounded shrink-0 ${
-                                    isFree
-                                      ? 'bg-[#25D366]/15 text-[#25D366] border border-[#25D366]/30'
-                                      : 'bg-[#c5a059]/20 text-[#c5a059] border border-[#c5a059]/40'
-                                  }`}
-                                >
-                                  {isFree ? 'Frais 0€' : `+${city.fee.toFixed(2).replace('.', ',')}€`}
-                                </span>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-
+                {/* 4. Address and road travel fees */}
+                <AddressPicker onChange={handleAddressChange} />
+                <div>
                     {/* Location Type (Domicile vs Lieu de travail) */}
                     <div>
                       <label className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1.5">
@@ -652,85 +492,6 @@ ${optionsList}
                         </button>
                       </div>
                     </div>
-                  </div>
-
-                  {/* Calculated Distance & Fee Feedback Banner */}
-                  <div className={`p-3 rounded-xl border text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 ${
-                    displacementFee === 0
-                      ? 'bg-[#25D366]/10 border-[#25D366]/30 text-white'
-                      : 'bg-[#c5a059]/10 border-[#c5a059]/30 text-white'
-                  }`}>
-                    <div className="flex items-center space-x-2">
-                      {displacementFee === 0 ? (
-                        <CheckCircle2 className="w-4 h-4 text-[#25D366] shrink-0" />
-                      ) : (
-                        <MapPin className="w-4 h-4 text-[#c5a059] shrink-0" />
-                      )}
-                      <div>
-                        <span className="font-semibold text-white">
-                          {bookingState.cityName || 'Orange'}
-                        </span>
-                        <span className="text-gray-300 ml-1.5">
-                          ({cityDistanceKm} km depuis base Orange)
-                        </span>
-                        <span className="block text-[11px] text-gray-400">
-                          {displacementFee === 0
-                            ? 'Frais de déplacement offerts (Rayon de 10 km)'
-                            : `Frais calculés automatiquement : 10 km offerts + ${Math.max(0, cityDistanceKm - 10)} km × 0,60€/km`}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="shrink-0 text-right">
-                      <span className={`text-xs font-bold px-2.5 py-1 rounded-lg ${
-                        displacementFee === 0
-                          ? 'bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/40'
-                          : 'bg-[#c5a059]/25 text-[#c5a059] border border-[#c5a059]/50'
-                      }`}>
-                        {displacementFee === 0 ? 'Frais déplacement : 0€' : `Frais déplacement : +${displacementFee.toFixed(2).replace('.', ',')}€`}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Quick Select Popular Towns */}
-                  <div>
-                    <span className="text-[10px] uppercase tracking-wider text-gray-400 font-medium block mb-1.5">
-                      Suggestions rapides communes proches :
-                    </span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {POPULAR_QUICK_CITIES.map((c) => {
-                        const isSelected = bookingState.cityName.toLowerCase() === c.name.toLowerCase();
-                        return (
-                          <button
-                            key={c.name}
-                            type="button"
-                            onClick={() => handleSelectCommune(c)}
-                            className={`px-2.5 py-1 rounded-lg text-[11px] border transition-all cursor-pointer flex items-center space-x-1 ${
-                              isSelected
-                                ? 'bg-[#25D366]/25 border-[#25D366] text-white font-semibold'
-                                : 'bg-white/5 hover:bg-white/10 border-white/10 text-gray-300'
-                            }`}
-                          >
-                            <span>{c.name}</span>
-                            <span className={`text-[10px] font-bold ${c.fee === 0 ? 'text-[#25D366]' : 'text-[#c5a059]'}`}>
-                              ({c.fee === 0 ? '0€' : `+${c.fee}€`})
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Address details */}
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Adresse précise ou Nom de l'entreprise (ex: 15 Rue de la République)"
-                    value={bookingState.customAddress}
-                    onChange={(e) => setBookingState((prev) => ({ ...prev, customAddress: e.target.value }))}
-                    className="w-full bg-black/60 border border-white/15 focus:border-[#25D366] text-white text-xs rounded-xl p-3 focus:outline-none"
-                  />
                 </div>
 
                 {/* 5. Date & Time */}
@@ -831,7 +592,7 @@ ${optionsList}
                 <div className="pt-4 flex flex-col sm:flex-row gap-3">
                   <button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !addressTravel}
                     className="flex-1 green-gradient-bg text-black py-4 rounded-xl text-xs uppercase tracking-[0.15em] font-bold shadow-xl hover:brightness-110 transition-all flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
@@ -848,7 +609,9 @@ ${optionsList}
                   </button>
 
                   <a
-                    href={generateWhatsAppMessage()}
+                    href={addressTravel ? generateWhatsAppMessage() : undefined}
+                    aria-disabled={!addressTravel}
+                    onClick={event => { if (!addressTravel) event.preventDefault(); }}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 bg-[#25D366] hover:bg-[#20ba59] text-black py-4 rounded-xl text-xs uppercase tracking-[0.15em] font-bold shadow-xl transition-all flex items-center justify-center space-x-2"
@@ -896,10 +659,10 @@ ${optionsList}
                 )}
 
                 <div className="flex justify-between items-center pt-2 border-t border-white/5">
-                  <span className="text-gray-300">Déplacement ({bookingState.cityName}) :</span>
+                  <span className="text-gray-300">Déplacement {bookingState.cityName && '(' + bookingState.cityName + ')'} :</span>
                   <span className={displacementFee === 0 ? 'text-[#25D366] font-semibold' : 'text-[#c5a059] font-bold'}>
-                    {displacementFee === 0
-                      ? 'Offert (< 10km)'
+                    {!addressTravel ? 'À calculer' : displacementFee === 0
+                      ? 'Offert (jusqu’à 10 km)'
                       : `+${displacementFee.toFixed(2).replace('.', ',')}€`}
                   </span>
                 </div>

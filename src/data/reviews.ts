@@ -17,9 +17,9 @@ export const FAQS: FaqItem[] = [
   },
   {
     category: 'Logistique & Déplacement',
-    question: 'Quelles sont les villes couvertes sans frais supplémentaires ?',
+    question: 'Comment sont calculés les frais de déplacement ?',
     answer:
-      'Les frais de déplacement sont entièrement offerts dans un rayon de 10 km autour d\'Orange (Orange, Piolenc, Camaret-sur-Aigues, Courthézon, Sérignan-du-Comtat, Châteauneuf-du-Pape et Jonquières). Au-delà de 10 km, un tarif de 0,60€ par kilomètre supplémentaire est appliqué.',
+      "Nous intervenons à Orange et aux alentours. Les 10 premiers kilomètres du trajet routier aller depuis le centre-ville d’Orange sont offerts. Au-delà, les frais sont de 0,60 € par kilomètre supplémentaire. Le calcul utilise l’adresse choisie lors de la réservation et le trajet routier le plus court, plutôt que le centre de votre commune.",
   },
   {
     category: 'Soin & Matériaux',
