@@ -9,7 +9,7 @@ function Comparison({ exterior = false }: { exterior?: boolean }) {
 
   return <figure className="min-w-0">
     <h3 className="font-serif-luxury text-2xl sm:text-3xl text-white text-center mb-5">{title}</h3>
-    <div className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-[#25D366]/30 bg-black shadow-2xl shadow-black/40 select-none">
+    <div style={{ aspectRatio: exterior ? '3 / 4' : '946 / 1213' }} className="relative overflow-hidden rounded-2xl border border-[#25D366]/30 bg-black shadow-2xl shadow-black/40 select-none">
       {exterior ? (
         <div className="absolute inset-0 bg-gradient-to-br from-[#10291c] to-[#0b1510]" aria-hidden="true" />
       ) : (
@@ -49,7 +49,7 @@ function Comparison({ exterior = false }: { exterior?: boolean }) {
         aria-label={exterior ? 'Déplacer le curseur du comparateur extérieur, photos en préparation' : "Déplacer le curseur pour comparer l'intérieur de la Porsche avant et après le nettoyage"} />
     </div>
     <figcaption className="mt-4 text-center text-xs sm:text-sm text-gray-400">
-      {exterior ? 'Le comparateur est prêt à accueillir les prochaines photos.' : 'Faites glisser le curseur pour découvrir le résultat sur cette Porsche Cayenne.'}
+      {exterior ? 'Le comparateur est prêt à accueillir les prochaines photos.' : 'Faites glisser le curseur pour comparer les deux vues. Illustration : visuel avant retouché.'}
     </figcaption>
   </figure>;
 }
