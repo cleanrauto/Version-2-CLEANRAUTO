@@ -9,6 +9,7 @@ import { Footer } from './components/Footer';
 import { LegalModal } from './components/LegalModal';
 import { StickyMobileBar } from './components/StickyMobileBar';
 import { BeforeAfter } from './components/BeforeAfter';
+import { HyundaiRealisation } from './components/HyundaiRealisation';
 import { ReviewsSection } from './components/ReviewsSection';
 import { VehicleType, Category } from './types';
 import { Phone, Mail, MessageSquare, ArrowUpRight } from 'lucide-react';
@@ -49,7 +50,7 @@ export default function App({ page = '/' }: { page?: string }) {
    {page === '/formules/' && <FormulasSection onSelectFormula={reserve} />}
    {page === '/options/' && <AddonsSection selectedAddonIds={addons} onToggleAddon={id => setAddons(current => current.includes(id) ? current.filter(x => x !== id) : [...current, id])} onOpenBookingWithOptions={() => reserve()} />}
    {page === '/faq/' && <FaqSection />}
-   {page === '/realisations-avis/' && <><BeforeAfter /><ReviewsSection /></>}
+   {page === '/realisations-avis/' && <><HyundaiRealisation /><BeforeAfter /><ReviewsSection /></>}
    {page === '/contact/' && <>
     <section className="max-w-4xl mx-auto px-5 pt-5 pb-8">
      <div className="grid sm:grid-cols-3 gap-4">
