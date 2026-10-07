@@ -7,7 +7,7 @@ interface Props { onOpenLegal: () => void; onOpenBooking: () => void; }
 export function Footer({ onOpenLegal }: Props) {
   return <footer className="bg-[#07080a] text-gray-400 border-t border-white/10 pt-14 pb-28 sm:pb-12">
     <div className="max-w-7xl mx-auto px-5 sm:px-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-12">
         <div className="space-y-5">
           <a href="/" className="font-cinzel text-xl text-white tracking-[0.2em]">CLEAN<span className="text-[#25D366]">’R</span> AUTO</a>
           <p className="text-sm leading-relaxed">L’art du détail automobile. Un lavage soigné, à domicile ou sur votre lieu de travail. Là où vous êtes.</p>
@@ -20,23 +20,11 @@ export function Footer({ onOpenLegal }: Props) {
           </ul>
         </nav>
         <div>
-          <h2 className="text-sm uppercase tracking-[0.2em] font-bold text-white mb-5">Secteur d’intervention</h2>
-          <ul className="space-y-2 text-sm leading-relaxed">
-            <li className="text-white">Orange (84100) et alentours</li>
-            <li>Piolenc, Courthézon, Sérignan-du-Comtat</li>
-            <li>Camaret-sur-Aigues, Châteauneuf-du-Pape, Jonquières</li>
-            <li>Uchaux, Mornas, Bédarrides, Sorgues</li>
-            <li>Avignon, Carpentras, Bollène</li>
-            <li>Pierrelatte, Montélimar, Bagnols-sur-Cèze, Roquemaure</li>
-          </ul>
-          <p className="text-xs leading-relaxed mt-4">Déplacement offert jusqu’à 10 km du centre d’Orange, puis 0,65 € par kilomètre supplémentaire. Frais calculés selon votre adresse lors de la réservation.</p>
-        </div>
-        <div>
           <h2 className="text-sm uppercase tracking-[0.2em] font-bold text-white mb-5">Contact & rendez-vous</h2>
           <div className="space-y-4 text-sm text-gray-300">
             <a href="tel:0617200516" className="flex items-center gap-3 hover:text-[#25D366]"><Phone className="w-5 h-5 shrink-0 text-[#25D366]" aria-hidden="true" />06 17 20 05 16</a>
             <a href="mailto:contact@cleanrauto.fr" className="flex items-center gap-3 hover:text-[#25D366]"><Mail className="w-5 h-5 shrink-0 text-[#25D366]" aria-hidden="true" /><span className="break-all">contact@cleanrauto.fr</span></a>
-            <p className="flex items-start gap-3"><MapPin className="w-5 h-5 shrink-0 text-[#25D366] mt-0.5" aria-hidden="true" /><span>Intervention à domicile & en entreprise à Orange, dans le Vaucluse et les départements voisins.</span></p>
+            <p className="flex items-start gap-3"><MapPin className="w-5 h-5 shrink-0 text-[#25D366] mt-0.5" aria-hidden="true" /><span>À domicile ou sur votre lieu de travail, à Orange et dans les alentours.</span></p>
             <p className="text-[#25D366] font-medium leading-relaxed">Du lundi au samedi : 08h00 – 19h00<br />(Sur rendez-vous)</p>
           </div>
           <a href="/reservation/" className="mt-6 flex items-center justify-center w-full green-gradient-bg text-black font-bold text-xs uppercase tracking-wider px-4 py-4 rounded-lg hover:brightness-110 transition-all text-center">Réserver un rendez-vous</a>
