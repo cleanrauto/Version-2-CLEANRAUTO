@@ -11,7 +11,8 @@ import { StickyMobileBar } from './components/StickyMobileBar';
 import { BeforeAfter } from './components/BeforeAfter';
 import { ReviewsSection } from './components/ReviewsSection';
 import { VehicleType, Category } from './types';
-import { Phone, Mail, MessageSquare, Instagram, Music2, ArrowUpRight } from 'lucide-react';
+import { Phone, Mail, MessageSquare, ArrowUpRight } from 'lucide-react';
+import { SocialLinks } from './components/SocialLinks';
 
 export const PAGES = {
  '/': { title: 'Lavage auto à Orange', heading: 'Lavage auto à Orange' },
@@ -54,10 +55,7 @@ export default function App({ page = '/' }: { page?: string }) {
      <div className="grid sm:grid-cols-3 gap-4">
       {[{href:'tel:0617200516', icon:Phone, label:'Téléphone', text:'06 17 20 05 16'}, {href:'https://wa.me/33617200516', icon:MessageSquare, label:'WhatsApp', text:'Écrivez-nous directement'}, {href:'mailto:contact@cleanrauto.fr', icon:Mail, label:'Email', text:'contact@cleanrauto.fr'}].map(({href,icon:Icon,label,text}) => <a key={label} href={href} className="glass-card p-5 rounded-xl text-center flex flex-col items-center gap-3"><Icon className="w-6 h-6 text-[#25D366]" /><span className="text-white font-medium">{label}</span><span className="text-sm break-all text-gray-300">{text}</span></a>)}
      </div>
-     <div className="flex justify-center items-center gap-6 mt-7">
-      <a href="https://www.instagram.com/clean.r.auto/" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 p-3 text-sm"><Instagram className="w-6 h-6 text-[#25D366]" />Instagram</a>
-      <a href="https://www.tiktok.com/@cleanr.auto" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 p-3 text-sm"><Music2 className="w-6 h-6 text-[#25D366]" />TikTok</a>
-     </div>
+     <div className="mt-8"><SocialLinks /></div>
     </section>
 
    </>}
