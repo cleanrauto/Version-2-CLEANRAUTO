@@ -35,16 +35,28 @@ test('delivery success and partial failures report the true reception state', as
     globalThis.fetch = async (_url, options) => { sent.push(JSON.parse(String(options?.body))); return new Response('{}', { status: 201 }); };
     const success = await handler(req());
     assert.deepEqual({ ...(await success.json()), reference: undefined }, { ok: true, confirmationSent: true, reference: undefined });
-    assert.equal(sent.length, 2);
-    assert.equal(sent[0].to[0].email, 'owner@example.com');
-    assert.equal(sent[0].replyTo.email, sample.email);
-    assert.equal(sent[1].to[0].email, sample.email);
+    assert.equal(sent.length, 3);
+    assert.equal(sent[0].updateEnabled, true);
+    assert.deepEqual(sent[0].listIds, [5]);
+    assert.equal(sent[0].attributes.VEHICULE, sample.vehicleModelDetails);
+    assert.equal(sent[1].to[0].email, 'owner@example.com');
+    assert.equal(sent[1].replyTo.email, sample.email);
+    assert.equal(sent[2].to[0].email, sample.email);
     globalThis.fetch = async () => new Response('{}', { status: 500 });
     assert.equal((await handler(req())).status, 502);
     let calls = 0;
-    globalThis.fetch = async () => new Response('{}', { status: ++calls === 1 ? 201 : 500 });
+    globalThis.fetch = async () => new Response('{}', { status: ++calls <= 2 ? 201 : 500 });
     const partial = await (await handler(req())).json();
     assert.equal(partial.ok, true);
     assert.equal(partial.confirmationSent, false);
   } finally { globalThis.fetch = original; }
+});
+
+test('compound first and last names are preserved; legacy names are not guessed', () => {
+  const booking = prepareBooking({ ...sample, firstName: 'Jean Pierre', lastName: 'De la Tour' });
+  assert.equal(booking.name, 'Jean Pierre De la Tour');
+  assert.equal(booking.firstName, 'Jean Pierre');
+  assert.equal(booking.lastName, 'De la Tour');
+  assert.equal(prepareBooking(sample).firstName, '');
+  assert.throws(() => prepareBooking({ ...sample, firstName: 'Jean', lastName: '' }));
 });
