@@ -28,5 +28,5 @@ Le formulaire appelle `/.netlify/functions/booking-email`. Les deux modèles HTM
 `node --import tsx --test tests/booking-email.test.mts`
 
 ## Fichier clients automatique
-Chaque demande POST validée enregistre un contact Brevo avant les emails. La liste « Clients site Clean’R Auto » a l’ID 5. Attributs texte existants : NOM, PRENOM, VEHICULE. Le formulaire collecte nom et prénom séparément. Les anciens formulaires conservent le nom complet dans NOM, sans deviner son découpage.
+Chaque demande POST validée enregistre un contact Brevo avant les emails. La liste « Clients site Clean’R Auto » a l’ID 5. Attributs texte existants : NOM, PRENOM, VEHICULE, VILLE, TELEPHONE. Ville et téléphone proviennent de chaque demande ; TELEPHONE conserve le numéro tel que saisi sans inscription SMS. Le formulaire collecte nom et prénom séparément. Les anciens formulaires conservent le nom complet dans NOM, sans deviner son découpage.
 L’email normalisé identifie la fiche (`updateEnabled: true`) : les demandes suivantes actualisent le véhicule sans doublon. Aucun consentement marketing ni statut de blocage n’est modifié. Un échec d’enregistrement retourne une erreur au formulaire, sans annoncer une réception réussie. La liste est exportable depuis Brevo ; les téléchargements sont des copies à la date de l’export.
