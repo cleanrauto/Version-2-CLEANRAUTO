@@ -39,6 +39,8 @@ test('delivery success and partial failures report the true reception state', as
     assert.equal(sent[0].updateEnabled, true);
     assert.deepEqual(sent[0].listIds, [5]);
     assert.equal(sent[0].attributes.VEHICULE, sample.vehicleModelDetails);
+    assert.equal(sent[0].attributes.VILLE, sample.cityName);
+    assert.equal(sent[0].attributes.TELEPHONE, sample.phone);
     assert.equal(sent[1].to[0].email, 'owner@example.com');
     assert.equal(sent[1].replyTo.email, sample.email);
     assert.equal(sent[2].to[0].email, sample.email);
