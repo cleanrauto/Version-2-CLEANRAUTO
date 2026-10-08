@@ -39,7 +39,7 @@ export function prepareBooking(input: any) {
   const timeSlot = text('timeSlot', 80);
   const details = text('vehicleModelDetails', 1000, false);
   const comments = text('comments', 1000, false);
-  return { name, firstName, lastName, vehicle: details || vehicle.label, email, phone, formula: formula.name, total, rows: [
+  return { name, firstName, lastName, vehicle: details || vehicle.label, city, email, phone, formula: formula.name, total, rows: [
     ['Client', name], ['Téléphone', phone], ['Email', email], ['Véhicule', vehicle.label],
     ['Modèle et remarques', details || 'Non précisé'], ['Formule', formula.name],
     ['Options', addons.map(item => `${item.name} · ${money(item.price)}`).join('\n') || 'Aucune'],
@@ -98,7 +98,7 @@ export default async function handler(request: Request) {
       method: 'POST', headers: { 'api-key': apiKey, 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: booking.email.toLowerCase(), updateEnabled: true, listIds: [5],
         attributes: { NOM: booking.lastName || booking.name,
-          ...(booking.firstName ? { PRENOM: booking.firstName } : {}), VEHICULE: booking.vehicle } }),
+          ...(booking.firstName ? { PRENOM: booking.firstName } : {}), VEHICULE: booking.vehicle, VILLE: booking.city, TELEPHONE: booking.phone } }),
       signal: AbortSignal.timeout(12000),
     });
     if (!contact.ok) throw new Error('contact_failed');
