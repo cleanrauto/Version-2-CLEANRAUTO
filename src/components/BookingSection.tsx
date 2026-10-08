@@ -47,6 +47,8 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
     date: '',
     timeSlot: '09h00 - 12h00',
     fullName: '',
+    firstName: '',
+    lastName: '',
     phone: '',
     email: '',
     vehicleModelDetails: '',
@@ -519,21 +521,23 @@ ${optionsList}
                 </div>
 
                 {/* 6. Contact Details */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-white/10">
-                  <div>
-                    <label className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1.5 flex items-center space-x-1.5">
-                      <User className="w-3.5 h-3.5 text-[#25D366]" />
-                      <span>Nom & Prénom <strong className="text-[#25D366]">*</strong></span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Ex: M. Jean Dupont"
-                      value={bookingState.fullName}
-                      onChange={(e) => setBookingState((prev) => ({ ...prev, fullName: e.target.value }))}
-                      className="w-full bg-black/60 border border-white/15 focus:border-[#25D366] text-white text-xs rounded-xl p-3 focus:outline-none"
-                      required
-                    />
-                  </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-white/10">
+                  {(['firstName', 'lastName'] as const).map(field => (
+                    <div key={field}>
+                      <label htmlFor={`booking-${field}`} className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1.5">
+                        {field === 'firstName' ? 'Prénom' : 'Nom'} <strong className="text-[#25D366]">*</strong>
+                      </label>
+                      <input id={`booking-${field}`} type="text" maxLength={60}
+                        autoComplete={field === 'firstName' ? 'given-name' : 'family-name'}
+                        placeholder={field === 'firstName' ? 'Ex: Jean' : 'Ex: Dupont'}
+                        value={bookingState[field]}
+                        onChange={event => setBookingState(prev => {
+                          const next = { ...prev, [field]: event.target.value };
+                          return { ...next, fullName: `${next.firstName.trim()} ${next.lastName.trim()}`.trim() };
+                        })}
+                        className="w-full bg-black/60 border border-white/15 focus:border-[#25D366] text-white text-xs rounded-xl p-3 focus:outline-none" required />
+                    </div>
+                  ))}
 
                   <div>
                     <label className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1.5 flex items-center space-x-1.5">
