@@ -14,7 +14,11 @@ export function prepareBooking(input: any) {
     if (typeof value !== 'string' || value.length > max || (required && !value.trim())) throw new Error('invalid');
     return value.trim();
   };
-  const name = text('fullName', 120);
+  // Older open forms may still submit only fullName. Never guess compound names.
+  const structuredName = input?.firstName !== undefined || input?.lastName !== undefined;
+  const firstName = structuredName ? text('firstName', 60) : '';
+  const lastName = structuredName ? text('lastName', 60) : '';
+  const name = structuredName ? `${firstName} ${lastName}` : text('fullName', 120);
   const email = text('email', 254);
   const phone = text('phone', 30);
   if (!emailPattern.test(email) || !/^\+?[\d\s().-]{8,30}$/.test(phone)) throw new Error('invalid');
@@ -35,7 +39,7 @@ export function prepareBooking(input: any) {
   const timeSlot = text('timeSlot', 80);
   const details = text('vehicleModelDetails', 1000, false);
   const comments = text('comments', 1000, false);
-  return { name, email, phone, formula: formula.name, total, rows: [
+  return { name, firstName, lastName, vehicle: details || vehicle.label, email, phone, formula: formula.name, total, rows: [
     ['Client', name], ['Téléphone', phone], ['Email', email], ['Véhicule', vehicle.label],
     ['Modèle et remarques', details || 'Non précisé'], ['Formule', formula.name],
     ['Options', addons.map(item => `${item.name} · ${money(item.price)}`).join('\n') || 'Aucune'],
@@ -87,6 +91,18 @@ export default async function handler(request: Request) {
     });
     if (!response.ok) throw new Error('mail_failed');
   };
+  // This dedicated list is the client directory, not a marketing subscription.
+  // updateEnabled upserts by email and preserves existing opt-outs.
+  try {
+    const contact = await fetch('https://api.brevo.com/v3/contacts', {
+      method: 'POST', headers: { 'api-key': apiKey, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: booking.email.toLowerCase(), updateEnabled: true, listIds: [5],
+        attributes: { NOM: booking.lastName || booking.name,
+          ...(booking.firstName ? { PRENOM: booking.firstName } : {}), VEHICULE: booking.vehicle } }),
+      signal: AbortSignal.timeout(12000),
+    });
+    if (!contact.ok) throw new Error('contact_failed');
+  } catch { return json(502, { error: 'L’enregistrement de votre demande n’a pas pu être confirmé. Réessayez ou contactez-nous par WhatsApp ou téléphone.' }); }
   try { await send(ownerEmail, templates.owner); }
   catch { return json(502, { error: 'La réception de votre demande n’a pas pu être confirmée. Contactez-nous par WhatsApp ou téléphone.' }); }
   // The owner has received the request: a failed confirmation must not invite a duplicate submission.
