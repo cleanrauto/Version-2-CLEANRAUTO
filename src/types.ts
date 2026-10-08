@@ -70,6 +70,8 @@ export interface BookingState {
   date: string;
   timeSlot: string;
   fullName: string;
+  firstName: string;
+  lastName: string;
   phone: string;
   email: string;
   vehicleModelDetails: string;
