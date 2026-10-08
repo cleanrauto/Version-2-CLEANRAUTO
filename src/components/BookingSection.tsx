@@ -56,6 +56,9 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
   const [addressTravel, setAddressTravel] = useState<AddressTravel | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [confirmationSent, setConfirmationSent] = useState(true);
+  const [website, setWebsite] = useState('');
 
   // Sync state if props change
   useEffect(() => {
@@ -242,7 +245,7 @@ ${optionsList}
   const generateEmailMessage = () => {
     const subject = `[Réservation Clean'R Auto] - ${bookingState.fullName.trim() || 'Client'} (${bookingState.cityName} - ${grandTotalDisplay})`;
     const body = generateStructuredBookingDetails(false);
-    return `mailto:cleanr.autopro@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    return `mailto:contact@cleanrauto.fr?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
   const handleSubmitForm = async (e: React.FormEvent) => {
@@ -250,35 +253,22 @@ ${optionsList}
     if (!addressTravel) return;
     setIsSubmitting(true);
 
-    const formattedMessage = generateStructuredBookingDetails(false);
-
-    // Only send the exact formatted reservation text, without duplicated individual form fields
-    const payload = {
-      _subject: `📋 [Réservation Clean'R] ${bookingState.fullName.trim() || 'Client'} - ${bookingState.cityName} (${grandTotalDisplay})`,
-      email: bookingState.email.trim() || undefined,
-      _replyto: bookingState.email.trim() || undefined,
-      name: bookingState.fullName.trim() || undefined,
-      DEMANDE_DE_RESERVATION: formattedMessage,
-    };
-
+    setSubmitError('');
     try {
-      const response = await fetch('https://formspree.io/f/xkjwwjww', {
+      const response = await fetch('/.netlify/functions/booking-email', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ ...bookingState, distanceKm: addressTravel.distanceKm, website }),
       });
-
-      if (response.ok) {
-        setSubmitted(true);
-      } else {
-        setSubmitted(true);
+      const result = await response.json().catch(() => null);
+      if (!response.ok || result?.ok !== true) {
+        setSubmitError(result?.error || 'L’envoi n’a pas abouti. Réessayez ou contactez-nous par WhatsApp.');
+        return;
       }
-    } catch (err) {
-      console.error('Erreur envoi Formspree:', err);
+      setConfirmationSent(result.confirmationSent === true);
       setSubmitted(true);
+    } catch {
+      setSubmitError('La réception de votre demande n’a pas pu être confirmée. Contactez-nous par WhatsApp ou téléphone.');
     } finally {
       setIsSubmitting(false);
     }
@@ -313,9 +303,10 @@ ${optionsList}
             <h3 className="font-serif-luxury text-3xl text-white">Demande transmise avec succès !</h3>
 
             <p className="text-sm text-[#a0aab8] font-light leading-relaxed">
-              Merci <strong className="text-white">{bookingState.fullName}</strong>. Notre équipe Clean'R Auto traite votre demande pour <strong className="text-[#25D366]">{currentFormula.name}</strong> à <strong className="text-white">{bookingState.cityName}</strong> et vous rappelle sous 2 heures ouvrées pour confirmer l'horaire précis.
+              Merci <strong className="text-white">{bookingState.fullName}</strong>. Notre équipe Clean'R Auto traite votre demande pour <strong className="text-[#25D366]">{currentFormula.name}</strong> à <strong className="text-white">{bookingState.cityName}</strong>. Nous vous recontacterons pour valider le créneau et les modalités d’intervention. Votre rendez-vous reste à confirmer.
             </p>
 
+            <p className="text-sm text-gray-300" role="status">{confirmationSent ? 'Un email récapitulatif vous a été envoyé. Pensez à vérifier vos courriers indésirables.' : 'Votre demande a bien été transmise, mais l’email de confirmation n’a pas pu être envoyé. Vous n’avez pas besoin de renvoyer votre demande.'}</p>
             <div className="p-4 bg-white/5 rounded-xl text-xs text-gray-300 border border-white/10 space-y-1 text-left max-w-md mx-auto">
               <div className="flex justify-between">
                 <span className="text-gray-400">Véhicule :</span>
@@ -588,6 +579,8 @@ ${optionsList}
                   />
                 </div>
 
+                <div className="absolute -left-[10000px]" aria-hidden="true"><label>Site web<input name="website" value={website} onChange={event => setWebsite(event.target.value)} tabIndex={-1} autoComplete="off" /></label></div>
+                {submitError && <p role="alert" className="rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-sm text-red-200">{submitError}</p>}
                 {/* Action Submit Buttons */}
                 <div className="pt-4 flex flex-col sm:flex-row gap-3">
                   <button
