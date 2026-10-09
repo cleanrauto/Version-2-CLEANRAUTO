@@ -6,9 +6,9 @@ Le formulaire appelle `/.netlify/functions/booking-email`. Les deux modèles HTM
 
 1. Configurer le compte Brevo et son service d’emails transactionnels.
 2. Vérifier l’expéditeur `contact@cleanrauto.fr` et authentifier le domaine avec les enregistrements fournis par Brevo. Conserver les enregistrements de messagerie existants.
-3. Ajouter dans Netlify, pour les Functions uniquement, `BREVO_API_KEY`, `BOOKING_SENDER_EMAIL` (expéditeur vérifié) et `BOOKING_OWNER_EMAIL` (boîte recevant les devis). Aucune clé ne doit être ajoutée au dépôt ni aux variables VITE publiques.
+3. Ajouter dans Netlify, pour les Functions uniquement, `BREVO_API_KEY`, `BOOKING_SENDER_EMAIL` (expéditeur vérifié). Les notifications de devis sont envoyées uniquement à `contact@cleanrauto.fr`, défini dans le code ; l’ancienne variable `BOOKING_OWNER_EMAIL` n’est plus utilisée. Aucune clé ne doit être ajoutée au dépôt ni aux variables VITE publiques.
 4. Déployer en aperçu, puis envoyer une demande de test autorisée vers les boîtes du propriétaire. Vérifier réception, récapitulatif, réponses et courrier indésirable. Les tests locaux simulent l’API et ne prouvent pas la délivrabilité.
-5. Publier après validation de ce test. Formspree reste utilisé en production jusqu’à cette bascule.
+5. Publier après validation de ce test. Brevo assure les envois en production.
 
 ## Comportement
 
