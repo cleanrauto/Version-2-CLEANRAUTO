@@ -277,7 +277,7 @@ ${optionsList}
   };
 
   return (
-    <section id="contact" className="py-24 bg-[#0b0c0e] relative overflow-hidden">
+    <section id="contact" className="pt-32 pb-24 bg-[#0b0c0e] relative overflow-hidden">
       {/* Background Subtle Gradient Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#25D366]/5 rounded-full blur-3xl pointer-events-none" />
 
@@ -287,9 +287,9 @@ ${optionsList}
           <span className="text-xs uppercase tracking-[0.25em] text-[#25D366] font-semibold block mb-3">
             Réservation & Estimation
           </span>
-          <h2 className="font-serif-luxury text-3xl sm:text-5xl font-light text-white tracking-tight mb-6">
+          <h1 className="font-serif-luxury text-3xl sm:text-5xl font-light text-white tracking-tight mb-6">
             Réserver votre <span className="green-gradient-text">Soin Automobile</span>
-          </h2>
+          </h1>
           <div className="w-16 h-[1px] bg-[#25D366]/50 mx-auto mb-6" />
           <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
             Configurez vos choix, obtenez votre tarif instantané et réservez par formulaire ou directement sur WhatsApp.
