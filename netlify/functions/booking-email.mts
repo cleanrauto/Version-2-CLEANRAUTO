@@ -79,7 +79,7 @@ export default async function handler(request: Request) {
   } catch { return json(400, { error: 'Vérifiez les informations renseignées.' }); }
   const apiKey = process.env.BREVO_API_KEY;
   const senderEmail = process.env.BOOKING_SENDER_EMAIL;
-  const ownerEmail = process.env.BOOKING_OWNER_EMAIL;
+  const ownerEmail = business.email;
   if (!apiKey || !senderEmail || !ownerEmail || !emailPattern.test(senderEmail) || !emailPattern.test(ownerEmail)) return json(503, { error: 'L’envoi en ligne est momentanément indisponible. Contactez-nous par WhatsApp ou téléphone.' });
   const reference = `CRA-${randomUUID().slice(0, 8).toUpperCase()}`;
   const templates = renderEmails(booking, reference);
