@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { FORMULAS, VEHICLE_OPTIONS } from '../../src/data/packages';
 import { ADDONS } from '../../src/data/addons';
+import { BOOKING_TIME_SLOTS, isValidBookingDate, normalizeAddonIds } from '../../src/utils/bookingRules';
 import type { VehicleType } from '../../src/types';
 
 const business = { name: 'Clean’R Auto', email: 'contact@cleanrauto.fr', phone: '06 17 20 05 16' };
@@ -27,16 +28,20 @@ export function prepareBooking(input: any) {
   if (!formula || !vehicle) throw new Error('invalid');
   if (!Array.isArray(input.selectedAddonIds) || input.selectedAddonIds.length > ADDONS.length || input.selectedAddonIds.some((id: unknown) => !ADDONS.some(item => item.id === id))) throw new Error('invalid');
   if (typeof input.distanceKm !== 'number' || !Number.isFinite(input.distanceKm) || input.distanceKm < 0 || input.distanceKm > 1000 || typeof input.isWorkplace !== 'boolean') throw new Error('invalid');
+  if (normalizeAddonIds(input.selectedAddonIds).length !== input.selectedAddonIds.length) throw new Error('invalid');
   const addons = ADDONS.filter(item => input.selectedAddonIds.includes(item.id));
   const price = formula.prices[vehicle.id as VehicleType];
   const fee = Math.round(Math.max(0, input.distanceKm - 10) * 0.65 * 100) / 100;
   const total = typeof price === 'number' ? money(price + addons.reduce((sum, item) => sum + item.price, 0) + fee) : 'Sur devis';
   const date = text('date', 10, false);
-  if (date && (!/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(Date.parse(date)))) throw new Error('invalid');
+  if (date && !isValidBookingDate(date)) throw new Error('invalid');
   const dateLabel = date ? date.split('-').reverse().join('/') : 'À convenir';
   const city = text('cityName', 120);
   const address = text('customAddress', 300);
-  const timeSlot = text('timeSlot', 80);
+  const requestedTimeSlot = text('timeSlot', 80);
+  // Keep existing open forms compatible with the corrected morning schedule.
+  const timeSlot = requestedTimeSlot === '09h00 - 12h00' ? BOOKING_TIME_SLOTS[0].value : requestedTimeSlot;
+  if (!BOOKING_TIME_SLOTS.some(slot => slot.value === timeSlot)) throw new Error('invalid');
   const details = text('vehicleModelDetails', 1000, false);
   const comments = text('comments', 1000, false);
   return { name, firstName, lastName, vehicle: details || vehicle.label, city, email, phone, formula: formula.name, total, rows: [

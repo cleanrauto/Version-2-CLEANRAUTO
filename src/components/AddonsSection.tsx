@@ -58,6 +58,16 @@ export const AddonsSection: React.FC<AddonsSectionProps> = ({
             return (
               <div
                 key={addon.id}
+                role="button"
+                tabIndex={0}
+                aria-pressed={isSelected}
+                aria-label={`${addon.name}, +${addon.price} euros`}
+                onKeyDown={event => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    onToggleAddon(addon.id);
+                  }
+                }}
                 onClick={() => onToggleAddon(addon.id)}
                 className={`glass-card rounded-xl p-6 border transition-all duration-300 flex flex-col justify-between cursor-pointer group ${
                   isSelected

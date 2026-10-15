@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FORMULAS, VEHICLE_OPTIONS } from '../data/packages';
 import { ADDONS } from '../data/addons';
+import { BOOKING_TIME_SLOTS, todayInParis, isValidBookingDate, normalizeAddonIds, toggleAddonId } from '../utils/bookingRules';
 import { AddressPicker, AddressTravel } from './AddressPicker';
 import { VehicleType, Category, BookingState } from '../types';
 import {
@@ -40,12 +41,12 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
     vehicleType: initialVehicleType,
     category: FORMULAS.find(formula => formula.id === initialFormulaId)?.category || 'interieur',
     formulaId: initialFormulaId,
-    selectedAddonIds: initialAddonIds,
+    selectedAddonIds: normalizeAddonIds(initialAddonIds),
     cityName: '',
     customAddress: '',
     isWorkplace: false,
     date: '',
-    timeSlot: '09h00 - 12h00',
+    timeSlot: BOOKING_TIME_SLOTS[0].value,
     fullName: '',
     firstName: '',
     lastName: '',
@@ -61,6 +62,13 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
   const [submitError, setSubmitError] = useState('');
   const [confirmationSent, setConfirmationSent] = useState(true);
   const [website, setWebsite] = useState('');
+  const [minimumDate, setMinimumDate] = useState('');
+  useEffect(() => {
+    const refresh = () => setMinimumDate(todayInParis());
+    refresh();
+    const timer = window.setInterval(refresh, 60000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   // Sync state if props change
   useEffect(() => {
@@ -84,7 +92,7 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
 
   useEffect(() => {
     if (initialAddonIds && initialAddonIds.length > 0) {
-      setBookingState((prev) => ({ ...prev, selectedAddonIds: initialAddonIds }));
+      setBookingState((prev) => ({ ...prev, selectedAddonIds: normalizeAddonIds(initialAddonIds) }));
     }
   }, [initialAddonIds]);
 
@@ -125,11 +133,7 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
 
   const handleToggleAddon = (addonId: string) => {
     setBookingState((prev) => {
-      const exists = prev.selectedAddonIds.includes(addonId);
-      const updated = exists
-        ? prev.selectedAddonIds.filter((id) => id !== addonId)
-        : [...prev.selectedAddonIds, addonId];
-      return { ...prev, selectedAddonIds: updated };
+      return { ...prev, selectedAddonIds: toggleAddonId(prev.selectedAddonIds, addonId) };
     });
   };
 
@@ -250,9 +254,23 @@ ${optionsList}
     return `mailto:contact@cleanrauto.fr?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
+  const handleWhatsAppClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!addressTravel) {
+      event.preventDefault();
+      setSubmitError('Sélectionnez votre adresse dans les suggestions pour calculer le déplacement.');
+    } else if (bookingState.date && !isValidBookingDate(bookingState.date)) {
+      event.preventDefault();
+      setSubmitError('Choisissez une date valide à partir d’aujourd’hui.');
+    }
+  };
+
   const handleSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!addressTravel) return;
+    if (!isValidBookingDate(bookingState.date)) {
+      setSubmitError('Choisissez une date valide à partir d’aujourd’hui.');
+      return;
+    }
     setIsSubmitting(true);
 
     setSubmitError('');
@@ -302,7 +320,7 @@ ${optionsList}
               <CheckCircle2 className="w-8 h-8 stroke-[2.5]" />
             </div>
 
-            <h3 className="font-serif-luxury text-3xl text-white">Demande transmise avec succès !</h3>
+            <h2 className="font-serif-luxury text-3xl text-white">Demande transmise avec succès !</h2>
 
             <p className="text-sm text-[#a0aab8] font-light leading-relaxed">
               Merci <strong className="text-white">{bookingState.fullName}</strong>. Notre équipe Clean'R Auto traite votre demande pour <strong className="text-[#25D366]">{currentFormula.name}</strong> à <strong className="text-white">{bookingState.cityName}</strong>. Nous vous recontacterons pour valider le créneau et les modalités d’intervention. Votre rendez-vous reste à confirmer.
@@ -330,9 +348,9 @@ ${optionsList}
               </a>
 
               <a
-                href={addressTravel ? generateWhatsAppMessage() : undefined}
+                href={addressTravel ? generateWhatsAppMessage() : 'https://wa.me/33617200516'}
                     aria-disabled={!addressTravel}
-                    onClick={event => { if (!addressTravel) event.preventDefault(); }}
+                    onClick={handleWhatsAppClick}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="green-gradient-bg text-black px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 hover:brightness-110 transition-all"
@@ -366,6 +384,7 @@ ${optionsList}
                         key={v.id}
                         type="button"
                         onClick={() => handleVehicleChange(v.id)}
+                        aria-pressed={bookingState.vehicleType === v.id}
                         className={`p-2.5 rounded-lg border text-left transition-all text-xs sm:text-sm cursor-pointer ${
                           bookingState.vehicleType === v.id
                             ? 'bg-[#25D366]/20 border-[#25D366] text-white font-semibold shadow-md'
@@ -380,11 +399,13 @@ ${optionsList}
 
                 {/* 2. Formula Selection */}
                 <div>
-                  <label className="text-xs uppercase tracking-wider font-semibold text-[#25D366] block mb-2 flex items-center space-x-1.5">
+                  <label htmlFor="booking-formula" className="text-xs uppercase tracking-wider font-semibold text-[#25D366] block mb-2 flex items-center space-x-1.5">
                     <Sparkles className="w-4 h-4" />
                     <span>2. Choix de la formule principale</span>
                   </label>
                   <select
+                    id="booking-formula"
+                    aria-label="Choix de la formule principale"
                     value={bookingState.formulaId}
                     onChange={(e) => handleFormulaChange(e.target.value)}
                     className="w-full bg-black/60 border border-white/15 focus:border-[#25D366] text-white text-xs rounded-xl p-3.5 focus:outline-none"
@@ -435,6 +456,7 @@ ${optionsList}
                           key={addon.id}
                           type="button"
                           onClick={() => handleToggleAddon(addon.id)}
+                          aria-pressed={checked}
                           className={`p-2.5 rounded-lg border text-left text-xs transition-all flex items-center justify-between cursor-pointer ${
                             checked
                               ? 'bg-[#25D366]/20 border-[#25D366] text-white font-medium'
@@ -490,12 +512,15 @@ ${optionsList}
                 {/* 5. Date & Time */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1.5 flex items-center space-x-1">
+                    <label htmlFor="booking-date" className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1.5 flex items-center space-x-1">
                       <Calendar className="w-3.5 h-3.5 text-[#25D366]" />
                       <span>Date souhaitée</span>
                     </label>
                     <input
                       type="date"
+                      id="booking-date"
+                      aria-label="Date souhaitée"
+                      min={minimumDate}
                       value={bookingState.date}
                       onChange={(e) => setBookingState((prev) => ({ ...prev, date: e.target.value }))}
                       className="w-full bg-black/60 border border-white/15 focus:border-[#25D366] text-white text-xs rounded-xl p-3 focus:outline-none"
@@ -504,18 +529,18 @@ ${optionsList}
                   </div>
 
                   <div>
-                    <label className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1.5 flex items-center space-x-1">
+                    <label htmlFor="booking-time" className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1.5 flex items-center space-x-1">
                       <Clock className="w-3.5 h-3.5 text-[#25D366]" />
                       <span>Créneau horaire</span>
                     </label>
                     <select
+                      id="booking-time"
+                      aria-label="Créneau horaire"
                       value={bookingState.timeSlot}
                       onChange={(e) => setBookingState((prev) => ({ ...prev, timeSlot: e.target.value }))}
                       className="w-full bg-black/60 border border-white/15 focus:border-[#25D366] text-white text-xs rounded-xl p-3 focus:outline-none"
                     >
-                      <option value="08h30 - 11h30">Matinée (08h30 - 11h30)</option>
-                      <option value="12h00 - 15h00">Milieu de journée (12h00 - 15h00)</option>
-                      <option value="15h00 - 18h00">Après-midi (15h00 - 18h00)</option>
+                      {BOOKING_TIME_SLOTS.map(slot => <option key={slot.value} value={slot.value}>{slot.label}</option>)}
                     </select>
                   </div>
                 </div>
@@ -540,12 +565,15 @@ ${optionsList}
                   ))}
 
                   <div>
-                    <label className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1.5 flex items-center space-x-1.5">
+                    <label htmlFor="booking-phone" className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1.5 flex items-center space-x-1.5">
                       <Phone className="w-3.5 h-3.5 text-[#25D366]" />
                       <span>Téléphone <strong className="text-[#25D366]">*</strong></span>
                     </label>
                     <input
                       type="tel"
+                      id="booking-phone"
+                      aria-label="Téléphone"
+                      autoComplete="tel"
                       placeholder="Ex: 06 12 34 56 78"
                       value={bookingState.phone}
                       onChange={(e) => setBookingState((prev) => ({ ...prev, phone: e.target.value }))}
@@ -555,12 +583,15 @@ ${optionsList}
                   </div>
 
                   <div>
-                    <label className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1.5 flex items-center space-x-1.5">
+                    <label htmlFor="booking-email" className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1.5 flex items-center space-x-1.5">
                       <Mail className="w-3.5 h-3.5 text-[#25D366]" />
                       <span>Adresse E-mail <strong className="text-[#25D366]">*</strong></span>
                     </label>
                     <input
                       type="email"
+                      id="booking-email"
+                      aria-label="Adresse E-mail"
+                      autoComplete="email"
                       placeholder="Ex: client@exemple.fr"
                       value={bookingState.email}
                       onChange={(e) => setBookingState((prev) => ({ ...prev, email: e.target.value }))}
@@ -571,11 +602,13 @@ ${optionsList}
                 </div>
 
                 <div>
-                  <label className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1">
+                  <label htmlFor="booking-vehicle" className="text-xs uppercase tracking-wider font-semibold text-gray-300 block mb-1">
                     Modèle exact du véhicule & remarques
                   </label>
                   <input
                     type="text"
+                    id="booking-vehicle"
+                    aria-label="Modèle exact du véhicule et remarques"
                     placeholder="Ex: Porsche 911 Carrera 4S (Noir métallisé) / Cuir beige à traiter"
                     value={bookingState.vehicleModelDetails}
                     onChange={(e) => setBookingState((prev) => ({ ...prev, vehicleModelDetails: e.target.value }))}
@@ -606,9 +639,9 @@ ${optionsList}
                   </button>
 
                   <a
-                    href={addressTravel ? generateWhatsAppMessage() : undefined}
+                    href={addressTravel ? generateWhatsAppMessage() : 'https://wa.me/33617200516'}
                     aria-disabled={!addressTravel}
-                    onClick={event => { if (!addressTravel) event.preventDefault(); }}
+                    onClick={handleWhatsAppClick}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 bg-[#25D366] hover:bg-[#20ba59] text-black py-4 rounded-xl text-xs uppercase tracking-[0.15em] font-bold shadow-xl transition-all flex items-center justify-center space-x-2"
@@ -626,9 +659,9 @@ ${optionsList}
                 Récapitulatif financier
               </span>
 
-              <h3 className="font-serif-luxury text-2xl text-white mb-6">
+              <h2 className="font-serif-luxury text-2xl text-white mb-6">
                 Estimation instantanée
-              </h3>
+              </h2>
 
               <div className="space-y-4 text-xs border-y border-white/10 py-6 mb-6">
                 <div className="flex justify-between items-center">

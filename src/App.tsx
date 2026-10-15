@@ -14,6 +14,7 @@ import { ReviewsSection } from './components/ReviewsSection';
 import { VehicleType, Category } from './types';
 import { Phone, Mail, MessageSquare, ArrowUpRight } from 'lucide-react';
 import { SocialLinks } from './components/SocialLinks';
+import { toggleAddonId } from './utils/bookingRules';
 
 export const PAGES = {
  '/': { title: 'Lavage auto à Orange', heading: 'Lavage auto à Orange' },
@@ -49,7 +50,7 @@ export default function App({ page = '/' }: { page?: string }) {
     <p className="md:col-span-3 text-center text-sm text-gray-300 pt-3">Besoin d’un soin pour votre habitacle ? <a href="/nettoyage-interieur-voiture-orange/" className="text-[#25D366] underline underline-offset-4 hover:text-white transition-colors">Découvrez notre nettoyage intérieur à Orange</a>.</p>
    </section></> : page !== '/reservation/' && <section className="pt-32 pb-8 px-5 text-center max-w-5xl mx-auto"><a href="/" className="text-xs text-[#25D366] uppercase tracking-widest">Clean’R Auto • Orange 84100</a><h1 className="font-serif-luxury text-4xl sm:text-6xl text-white mt-5">{info.heading}</h1></section>}
    {page === '/formules/' && <FormulasSection onSelectFormula={reserve} />}
-   {page === '/options/' && <AddonsSection selectedAddonIds={addons} onToggleAddon={id => setAddons(current => current.includes(id) ? current.filter(x => x !== id) : [...current, id])} onOpenBookingWithOptions={() => reserve()} />}
+   {page === '/options/' && <AddonsSection selectedAddonIds={addons} onToggleAddon={id => setAddons(current => toggleAddonId(current, id))} onOpenBookingWithOptions={() => reserve()} />}
    {page === '/faq/' && <FaqSection />}
    {page === '/realisations-avis/' && <><HyundaiRealisation /><BeforeAfter /><ReviewsSection /></>}
    {page === '/contact/' && <>
