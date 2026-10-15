@@ -12,7 +12,8 @@ import { Footer } from './components/Footer';
 import { LegalModal } from './components/LegalModal';
 import { StickyMobileBar } from './components/StickyMobileBar';
 import { VehicleType, Category } from './types';
-import heroInterior from './assets/images/lhd_white_interior_closeup_1785748121657.jpg';
+import heroInterior from './assets/images/lhd_white_interior_closeup_1785748121657.webp';
+import heroInteriorAvif from './assets/images/lhd_white_interior_closeup_1785748121657.avif';
 import { HyundaiRealisation } from './components/HyundaiRealisation';
 
 const processSteps = [
@@ -47,7 +48,10 @@ export const InteriorSeoPage: React.FC = () => {
       <main>
         <section className="relative min-h-screen pt-20 sm:pt-24 pb-12 flex flex-col justify-center overflow-hidden bg-[#0b0c0e]">
           <div className="absolute inset-0 z-0">
-            <img src={heroInterior} alt="Nettoyage intérieur automobile professionnel à Orange" className="w-full h-full object-cover object-center scale-105 brightness-75 contrast-105" />
+            <picture>
+              <source srcSet={heroInteriorAvif} type="image/avif" />
+              <img src={heroInterior} alt="Nettoyage intérieur automobile professionnel à Orange" width={1376} height={768} fetchPriority="high" loading="eager" className="w-full h-full object-cover object-center scale-105 brightness-75 contrast-105" />
+            </picture>
             <div className="absolute inset-0 bg-gradient-to-t from-[#0b0c0e] via-[#0b0c0e]/60 to-[#0b0c0e]/35" />
             <div className="absolute inset-0 bg-gradient-to-r from-[#0b0c0e]/85 via-transparent to-[#0b0c0e]/65" />
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#0b0c0e]/20 to-[#0b0c0e]" />

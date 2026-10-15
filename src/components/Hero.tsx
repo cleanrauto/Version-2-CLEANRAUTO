@@ -1,6 +1,7 @@
 import React from 'react';
 import { Sparkles, ChevronDown, ShieldCheck, Clock, Award } from 'lucide-react';
 import heroImgPath from '../assets/images/hero_car_luxury_1786020041468.webp';
+import heroAvifPath from '../assets/images/hero_car_luxury_1786020041468.avif';
 
 interface HeroProps {
   onOpenBooking: () => void;
@@ -11,6 +12,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
     <section className="relative min-h-[75vh] pt-20 sm:pt-24 pb-12 flex flex-col justify-center overflow-hidden bg-[#0b0c0e]">
       {/* Background Image with Gradient Overlay */}
       <div className="absolute inset-0 z-0">
+        <picture>
+        <source srcSet={heroAvifPath} type="image/avif" />
         <img
           src={heroImgPath}
           alt="Soin et detailing automobile de prestige Clean'R Auto"
@@ -21,6 +24,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
           loading="eager"
           referrerPolicy="no-referrer"
         />
+        </picture>
         {/* Subtle Dark Overlays for Text Legibility */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#0b0c0e] via-[#0b0c0e]/65 to-[#0b0c0e]/40" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0b0c0e]/80 via-transparent to-[#0b0c0e]/60" />
