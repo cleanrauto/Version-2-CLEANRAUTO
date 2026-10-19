@@ -10,7 +10,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+    <div className="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
       <div className="glass-card rounded-2xl max-w-3xl w-full max-h-[85vh] overflow-y-auto p-6 sm:p-8 border border-[#25D366]/40 relative bg-[#0e1015] shadow-2xl">
         {/* Close Button */}
         <button
@@ -79,6 +79,9 @@ export const LegalModal: React.FC<LegalModalProps> = ({ isOpen, onClose }) => {
             <p>
               Les informations collectées dans les formulaires de réservation (nom, téléphone, adresse, véhicule) servent exclusivement au traitement de votre demande de rendez-vous et ne sont jamais cédées ni vendues à des tiers.
             </p>
+            <h3 className="text-sm font-semibold text-white mt-4 mb-2">Mesure d’audience et cookies</h3>
+            <p>Avec votre consentement, Clean’R Auto utilise Google Analytics, fourni par Google, pour mesurer les visites et les actions sur le site : clics téléphone, WhatsApp et email, ainsi que les demandes dont la réception a été confirmée. Cette mesure est facultative et ne démarre pas avant votre acceptation. Les champs du formulaire et les coordonnées contenues dans les liens de contact ne sont pas envoyés à Analytics. La personnalisation publicitaire est désactivée.</p>
+            <p className="mt-2">Votre choix et les cookies Analytics sont conservés au maximum 6 mois. Vous pouvez refuser ou retirer votre accord à tout moment avec « Gérer les cookies », en bas de chaque page ; le refus ne limite pas l’accès aux prestations ni au formulaire. Pour toute question sur vos données, contactez contact@cleanrauto.fr. Consultez également la <a href="https://policies.google.com/privacy?hl=fr" target="_blank" rel="noopener noreferrer" className="text-[#25D366] underline">politique de confidentialité de Google</a>.</p>
           </div>
         </div>
 

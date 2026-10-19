@@ -3,6 +3,7 @@ import { FORMULAS, VEHICLE_OPTIONS } from '../data/packages';
 import { ADDONS } from '../data/addons';
 import { BOOKING_TIME_SLOTS, todayInParis, isValidBookingDate, normalizeAddonIds, toggleAddonId } from '../utils/bookingRules';
 import { AddressPicker, AddressTravel } from './AddressPicker';
+import { audienceEvent } from '../utils/analytics';
 import { VehicleType, Category, BookingState } from '../types';
 import {
   Sparkles,
@@ -285,6 +286,8 @@ ${optionsList}
         setSubmitError(result?.error || 'L’envoi n’a pas abouti. Réessayez ou contactez-nous par WhatsApp.');
         return;
       }
+      // Count a lead only after the server confirms reception, never on submit attempts.
+      if (!/^TEST\b/i.test(bookingState.firstName.trim())) audienceEvent('generate_lead');
       setConfirmationSent(result.confirmationSent === true);
       setSubmitted(true);
     } catch {

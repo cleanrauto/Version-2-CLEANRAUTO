@@ -1,6 +1,7 @@
 import React from 'react';
 import { Phone, Mail, MapPin, MessageSquare } from 'lucide-react';
 import { SocialLinks } from './SocialLinks';
+import { AudienceConsent } from './AudienceConsent';
 
 interface Props { onOpenLegal: () => void; onOpenBooking: () => void; }
 
@@ -39,6 +40,7 @@ export function Footer({ onOpenLegal }: Props) {
         <div className="flex flex-wrap justify-center gap-5">
           <button onClick={onOpenLegal} className="underline hover:text-[#25D366] cursor-pointer">Mentions légales & CGV</button>
           <button onClick={onOpenLegal} className="underline hover:text-[#25D366] cursor-pointer">Politique de confidentialité</button>
+          <AudienceConsent onOpenPrivacy={onOpenLegal} />
         </div>
       </div>
     </div>
