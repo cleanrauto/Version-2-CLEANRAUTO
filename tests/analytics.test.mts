@@ -15,7 +15,7 @@ function harness(saved: unknown = null, blockedStorage = false) {
   const document: any = { cookie: '', referrer: 'https://www.google.com/search?q=private', createElement: () => ({}), head: { appendChild: (el: any) => scripts.push(el) }, addEventListener: (name: string, callback: Function) => { listeners[name] = callback; } };
   const exports: any = {};
   vm.runInNewContext(code, { exports, window, document, Element, URL, Date, location: { origin: 'https://cleanrauto.fr', hostname: 'cleanrauto.fr', pathname: '/reservation/', search: '?email=private@example.com' }, localStorage: { getItem: () => { if (blockedStorage) throw Error(); return stored; }, setItem: (_key: string, value: string) => { if (blockedStorage) throw Error(); stored = value; } } });
-  return { api: exports, window, scripts, reloads: () => reloads, click: (href: string) => listeners.click({ target: new Element(href) }), commands: () => (window.dataLayer || []).map((args: any) => Array.from(args)) };
+  return { api: exports, window, scripts, reloads: () => reloads, click: (href: string) => listeners.click({ target: new Element(href) }), commands: () => (window.cleanrAudienceLayer || []).map((args: any) => Array.from(args)) };
 }
 
 test('no Analytics script or event before consent, after refusal, or when storage is blocked', () => {
@@ -27,6 +27,8 @@ test('no Analytics script or event before consent, after refusal, or when storag
 test('acceptance loads Analytics once and strips personal query strings', () => {
   const h = harness(); h.api.initializeAudience(); h.api.setAudienceChoice('accepted'); h.api.initializeAudience();
   assert.equal(h.scripts.length, 1);
+  assert.match(h.scripts[0].src, /[&]l=cleanrAudienceLayer/);
+  assert.equal(h.window.dataLayer, undefined);
   assert.equal(h.commands().filter((c: any) => c[1] === 'page_view').length, 1);
   const config: any = h.commands().find((c: any) => c[0] === 'config');
   assert.equal(config[2].page_location, 'https://cleanrauto.fr/reservation/');

@@ -3,8 +3,8 @@ export const CONSENT_KEY = 'cleanr-audience-v1';
 const SIX_MONTHS = 180 * 24 * 60 * 60 * 1000;
 type Choice = 'accepted' | 'refused';
 type AnalyticsWindow = Window & {
-  dataLayer?: unknown[];
-  gtag?: (...args: unknown[]) => void;
+  cleanrAudienceLayer?: unknown[];
+  cleanrAudienceCommand?: (...args: unknown[]) => void;
 };
 let accepted = false;
 let started = false;
@@ -12,9 +12,11 @@ let listening = false;
 
 function command(...args: unknown[]) {
   const target = window as AnalyticsWindow;
-  target.dataLayer = target.dataLayer || [];
-  target.gtag = target.gtag || function () { target.dataLayer!.push(arguments); };
-  target.gtag(...args);
+  // Keep Analytics separate from the existing Tag Manager verification container.
+  // Otherwise GTM can also load this destination when it sees a config command.
+  target.cleanrAudienceLayer = target.cleanrAudienceLayer || [];
+  target.cleanrAudienceCommand = target.cleanrAudienceCommand || function () { target.cleanrAudienceLayer!.push(arguments); };
+  target.cleanrAudienceCommand(...args);
 }
 
 export function savedAudienceChoice(): Choice | null {
@@ -66,7 +68,7 @@ function startAudience() {
   });
   const script = document.createElement('script');
   script.async = true;
-  script.src = 'https://www.googletagmanager.com/gtag/js?id=' + MEASUREMENT_ID;
+  script.src = 'https://www.googletagmanager.com/gtag/js?id=' + MEASUREMENT_ID + '&l=cleanrAudienceLayer';
   script.id = 'cleanr-audience-script';
   document.head.appendChild(script);
   command('event', 'page_view', { send_to: MEASUREMENT_ID, page_location: pageAddress(), page_referrer: safeReferrer() });
