@@ -39,7 +39,8 @@ export async function searchAddresses(query: string, signal?: AbortSignal): Prom
 
 export async function calculateAddressTravel(address: AddressSuggestion, signal?: AbortSignal) {
   const params = new URLSearchParams({
-    resource: 'bdtopo-osrm',
+    // Use the currently supported IGN routing engine (OSRM is no longer available).
+    resource: 'bdtopo-valhalla',
     start: ORANGE_COORDS.lon + ',' + ORANGE_COORDS.lat,
     end: address.coordinates.join(','),
     profile: 'car',
