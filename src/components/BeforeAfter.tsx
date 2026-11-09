@@ -43,9 +43,9 @@ function Comparison({ exterior = false }: { exterior?: boolean }) {
     </div>
     <figcaption className="mt-4 text-center text-xs sm:text-sm text-gray-400">
       <span className="mb-1 block font-semibold text-white">
-        {exterior ? 'Porsche Cayenne S – Formule Premium Extérieur' : 'Porsche Cayenne S – Formule Prestige Intérieur'}
+        {exterior ? 'Porsche Cayenne S – Formule Extérieur Premium' : 'Porsche Cayenne S – Formule Prestige Intérieur'}
       </span>
-      {exterior ? 'Faites glisser le curseur. Illustration : visuel après retouché, plaques masquées.' : 'Faites glisser le curseur pour comparer l’habitacle avant et après le nettoyage.'}
+      {exterior ? 'Faites glisser le curseur pour comparer l’extérieur avant et après le nettoyage.' : 'Faites glisser le curseur pour comparer l’habitacle avant et après le nettoyage.'}
     </figcaption>
   </figure>;
 }
