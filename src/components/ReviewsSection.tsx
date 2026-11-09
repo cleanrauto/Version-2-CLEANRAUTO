@@ -2,7 +2,7 @@ import React from 'react';
 import { REVIEWS } from '../data/reviews';
 import { Star, Quote, ArrowUpRight } from 'lucide-react';
 
-const googleReviewsUrl = "https://www.google.com/maps/search/?api=1&query=Clean%27R%20Auto%20Orange%2006%2017%2020%2005%2016";
+const googleReviewsUrl = "https://www.google.com/maps/search/?api=1&query=Clean%27R%20Auto%20Orange&query_place_id=ChIJM8DZ7-J70IARPm2VffO_po8";
 export function ReviewsSection() {
  return <section id="avis" className="py-16 sm:py-20 bg-[#0e1015] border-t border-white/5">
   <div className="max-w-6xl mx-auto px-5 sm:px-6">
