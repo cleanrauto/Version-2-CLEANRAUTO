@@ -52,7 +52,7 @@ export default function App({ page = '/' }: { page?: string }) {
    {page === '/formules/' && <FormulasSection onSelectFormula={reserve} />}
    {page === '/options/' && <AddonsSection selectedAddonIds={addons} onToggleAddon={id => setAddons(current => toggleAddonId(current, id))} onOpenBookingWithOptions={() => reserve()} />}
    {page === '/faq/' && <FaqSection />}
-   {page === '/realisations-avis/' && <><HyundaiRealisation /><BeforeAfter /><ReviewsSection /></>}
+   {page === '/realisations-avis/' && <><BeforeAfter /><HyundaiRealisation /><ReviewsSection /></>}
    {page === '/contact/' && <>
     <section className="max-w-4xl mx-auto px-5 pt-5 pb-8">
      <div className="grid sm:grid-cols-3 gap-4">
