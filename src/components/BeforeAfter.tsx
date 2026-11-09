@@ -11,7 +11,7 @@ function Comparison({ exterior = false }: { exterior?: boolean }) {
 
   return <figure className="min-w-0">
     <h3 className="font-serif-luxury text-2xl sm:text-3xl text-white text-center mb-5">{title}</h3>
-    <div style={{ aspectRatio: exterior ? '1086 / 1433' : '946 / 1213' }} className="relative overflow-hidden rounded-2xl border border-[#25D366]/30 bg-black shadow-2xl shadow-black/40 select-none">
+    <div style={{ aspectRatio: exterior ? '1086 / 1433' : '1152 / 1536' }} className="relative overflow-hidden rounded-2xl border border-[#25D366]/30 bg-black shadow-2xl shadow-black/40 select-none">
       <img src={exterior ? exteriorAfterImage : afterImage}
         alt={exterior ? "Porsche Cayenne après nettoyage extérieur, plaque masquée" : "Intérieur d'une Porsche Cayenne après nettoyage par Clean'R Auto à Orange"}
         className="absolute inset-0 w-full h-full object-cover pointer-events-none"
@@ -42,7 +42,7 @@ function Comparison({ exterior = false }: { exterior?: boolean }) {
         aria-label={exterior ? 'Déplacer le curseur pour comparer les deux vues extérieures de la Porsche Cayenne' : "Déplacer le curseur pour comparer l'intérieur de la Porsche avant et après le nettoyage"} />
     </div>
     <figcaption className="mt-4 text-center text-xs sm:text-sm text-gray-400">
-      {exterior ? 'Faites glisser le curseur. Illustration : visuel après retouché, plaques masquées.' : 'Faites glisser le curseur pour comparer les deux vues. Illustration : visuel avant retouché.'}
+      {exterior ? 'Faites glisser le curseur. Illustration : visuel après retouché, plaques masquées.' : 'Faites glisser le curseur pour comparer l’habitacle avant et après le nettoyage.'}
     </figcaption>
   </figure>;
 }
