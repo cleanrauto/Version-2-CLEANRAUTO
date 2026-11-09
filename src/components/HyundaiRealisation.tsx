@@ -2,7 +2,17 @@ import React from 'react';
 import before from '../assets/images/hyundai-i30-avant.webp';
 import after from '../assets/images/hyundai-i30-apres.webp';
 
-export function HyundaiRealisation() {
+interface HyundaiRealisationProps {
+  reservationHref?: string;
+  reservationLabel?: string;
+  moreHref?: string;
+}
+
+export function HyundaiRealisation({
+  reservationHref = '/reservation/',
+  reservationLabel = 'Réserver mon nettoyage',
+  moreHref,
+}: HyundaiRealisationProps) {
   return <section className="py-16 sm:py-20 bg-[#0b0c0e] border-b border-white/10" aria-labelledby="hyundai-title">
     <article className="max-w-5xl mx-auto px-5">
       <div className="max-w-3xl mb-8">
@@ -20,8 +30,12 @@ export function HyundaiRealisation() {
         </figure>)}
       </div>
       <div className="mt-7 flex flex-col sm:flex-row gap-5 sm:items-center sm:justify-between">
-        <p className="text-sm text-gray-400">Clean’R Auto — Là où vous êtes.</p>
-        <a href="/reservation/" className="green-gradient-bg rounded-lg px-6 py-4 text-black text-xs font-bold uppercase tracking-wider text-center">Réserver mon nettoyage</a>
+        {moreHref ? (
+          <a href={moreHref} className="text-sm text-[#25D366] underline underline-offset-4">Voir nos réalisations et les avis clients</a>
+        ) : (
+          <p className="text-sm text-gray-400">Clean’R Auto — Là où vous êtes.</p>
+        )}
+        <a href={reservationHref} className="green-gradient-bg rounded-lg px-6 py-4 text-black text-xs font-bold uppercase tracking-wider text-center">{reservationLabel}</a>
       </div>
     </article>
   </section>;

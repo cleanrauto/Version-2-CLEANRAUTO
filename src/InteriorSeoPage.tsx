@@ -110,7 +110,11 @@ export const InteriorSeoPage: React.FC = () => {
 
         <FormulasSection isInteriorLandingPage onSelectFormula={(id, category, vehicle) => scrollToBooking(id, category, vehicle)} />
 
-        <HyundaiRealisation />
+        <HyundaiRealisation
+          reservationHref="/reservation/?formule=int-prestige"
+          reservationLabel="Réserver un nettoyage intérieur"
+          moreHref="/realisations-avis/"
+        />
 
         <section className="py-16 sm:py-20 px-5 bg-[#0b0c0e]" aria-labelledby="interior-questions-title">
           <div className="max-w-4xl mx-auto">
