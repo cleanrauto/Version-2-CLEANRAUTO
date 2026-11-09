@@ -13,7 +13,7 @@ function Comparison({ exterior = false }: { exterior?: boolean }) {
     <h3 className="font-serif-luxury text-2xl sm:text-3xl text-white text-center mb-5">{title}</h3>
     <div style={{ aspectRatio: exterior ? '1086 / 1433' : '1152 / 1536' }} className="relative overflow-hidden rounded-2xl border border-[#25D366]/30 bg-black shadow-2xl shadow-black/40 select-none">
       <img src={exterior ? exteriorAfterImage : afterImage}
-        alt={exterior ? "Porsche Cayenne après nettoyage extérieur, plaque masquée" : "Intérieur d'une Porsche Cayenne après nettoyage par Clean'R Auto à Orange"}
+        alt={exterior ? "Porsche Cayenne S après nettoyage extérieur, plaque masquée" : "Intérieur d'une Porsche Cayenne S après nettoyage par Clean'R Auto à Orange"}
         className="absolute inset-0 w-full h-full object-cover pointer-events-none"
         style={exterior ? { transform: 'translate(-0.814%, 1.117%) matrix(1.076823, -0.01145, 0.004927, 1.073153, 0, 0)', transformOrigin: 'center' } : undefined} loading="lazy" draggable={false} />
 
@@ -39,9 +39,12 @@ function Comparison({ exterior = false }: { exterior?: boolean }) {
       <input type="range" min="0" max="100" value={position}
         onChange={event => setPosition(Number(event.target.value))}
         className="absolute inset-0 z-30 w-full h-full opacity-0 cursor-ew-resize focus-visible:opacity-100 focus-visible:h-8 focus-visible:top-auto focus-visible:bottom-2"
-        aria-label={exterior ? 'Déplacer le curseur pour comparer les deux vues extérieures de la Porsche Cayenne' : "Déplacer le curseur pour comparer l'intérieur de la Porsche avant et après le nettoyage"} />
+        aria-label={exterior ? 'Déplacer le curseur pour comparer les deux vues extérieures de la Porsche Cayenne S' : "Déplacer le curseur pour comparer l'intérieur de la Porsche avant et après le nettoyage"} />
     </div>
     <figcaption className="mt-4 text-center text-xs sm:text-sm text-gray-400">
+      <span className="mb-1 block font-semibold text-white">
+        {exterior ? 'Porsche Cayenne S – Formule Premium Extérieur' : 'Porsche Cayenne S – Formule Prestige Intérieur'}
+      </span>
       {exterior ? 'Faites glisser le curseur. Illustration : visuel après retouché, plaques masquées.' : 'Faites glisser le curseur pour comparer l’habitacle avant et après le nettoyage.'}
     </figcaption>
   </figure>;
